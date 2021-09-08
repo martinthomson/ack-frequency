@@ -270,10 +270,15 @@ h4, h5, h6 {
 .author {
   padding-bottom: 0.3em;
 }
-#abstract+p, #abstract+p code, #abstract+p samp, #abstract+p tt {
+#abstract+p {
   font-size: 18px;
   line-height: 24px;
 }
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
 p {
   padding: 0;
   margin: 0.5em 0;
@@ -405,6 +410,12 @@ a.xref {
 tt, code, pre {
   background-color: var(--highlight-color);
   font: 14px/22px 'Oxygen Mono', monospace;
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines */
+  line-height: 0;
 }
 pre {
   border: 1px solid var(--line-color);
@@ -1007,11 +1018,11 @@ address div.right {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">QUIC Acknowledgement Frequency</td>
-<td class="right">July 2021</td>
+<td class="right">September 2021</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Iyengar &amp; Swett</td>
-<td class="center">Expires 25 January 2022</td>
+<td class="center">Expires 12 March 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1024,12 +1035,12 @@ address div.right {
 <dd class="internet-draft">draft-ietf-quic-ack-frequency-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-07-24" class="published">24 July 2021</time>
+<time datetime="2021-09-08" class="published">8 September 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-01-25">25 January 2022</time></dd>
+<dd class="expires"><time datetime="2022-03-12">12 March 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1079,7 +1090,7 @@ code and issues list for this draft can be found at
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 January 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 March 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1107,75 +1118,78 @@ code and issues list for this draft can be found at
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="compact toc ulEmpty ulBare">
-<li class="compact toc ulEmpty ulBare" id="section-toc.1-1.1">
+<nav class="toc"><ul class="ulBare compact toc ulEmpty">
+<li class="ulBare compact toc ulEmpty" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a></p>
-<ul class="ulEmpty ulBare compact toc">
-<li class="ulEmpty ulBare compact toc" id="section-toc.1-1.1.2.1">
+<ul class="compact ulBare ulEmpty toc">
+<li class="compact ulBare ulEmpty toc" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-terms-and-definitions" class="xref">Terms and Definitions</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.2">
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-motivation" class="xref">Motivation</a></p>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.3">
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-negotiating-extension-use" class="xref">Negotiating Extension Use</a></p>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-ack_frequency-frame" class="xref">ACK_FREQUENCY Frame</a></p>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-immediate_ack-frame" class="xref">IMMEDIATE_ACK Frame</a></p>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-multiple-ack_frequency-fram" class="xref">Multiple ACK_FREQUENCY Frames</a></p>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-ack_frequency-frame" class="xref">ACK_FREQUENCY Frame</a></p>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-sending-acknowledgments" class="xref">Sending Acknowledgments</a></p>
-<ul class="ulEmpty ulBare compact toc">
-<li class="ulEmpty ulBare compact toc" id="section-toc.1-1.6.2.1">
-                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="xref">6.1</a>.  <a href="#name-response-to-reordering" class="xref">Response to Reordering</a></p>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-multiple-ack_frequency-fram" class="xref">Multiple ACK_FREQUENCY Frames</a></p>
 </li>
-              <li class="ulEmpty ulBare compact toc" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="xref">6.2</a>.  <a href="#name-expediting-congestion-signa" class="xref">Expediting Congestion Signals</a></p>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-sending-acknowledgments" class="xref">Sending Acknowledgments</a></p>
+<ul class="compact ulBare ulEmpty toc">
+<li class="compact ulBare ulEmpty toc" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-response-to-reordering" class="xref">Response to Reordering</a></p>
 </li>
-              <li class="ulEmpty ulBare compact toc" id="section-toc.1-1.6.2.3">
-                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="xref">6.3</a>.  <a href="#name-batch-processing-of-packets" class="xref">Batch Processing of Packets</a></p>
+              <li class="compact ulBare ulEmpty toc" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="xref">7.2</a>.  <a href="#name-expediting-congestion-signa" class="xref">Expediting Congestion Signals</a></p>
 </li>
-            </ul>
-</li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-computation-of-probe-timeou" class="xref">Computation of Probe Timeout Period</a></p>
-</li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-implementation-consideratio" class="xref">Implementation Considerations</a></p>
-<ul class="ulEmpty ulBare compact toc">
-<li class="ulEmpty ulBare compact toc" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-loss-detection" class="xref">Loss Detection</a></p>
-</li>
-              <li class="ulEmpty ulBare compact toc" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-new-connections" class="xref">New Connections</a></p>
-</li>
-              <li class="ulEmpty ulBare compact toc" id="section-toc.1-1.8.2.3">
-                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="xref">8.3</a>.  <a href="#name-window-based-congestion-con" class="xref">Window-based Congestion Controllers</a></p>
+              <li class="compact ulBare ulEmpty toc" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="xref">7.3</a>.  <a href="#name-batch-processing-of-packets" class="xref">Batch Processing of Packets</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a></p>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-computation-of-probe-timeou" class="xref">Computation of Probe Timeout Period</a></p>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-iana-considerations" class="xref">IANA Considerations</a></p>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-implementation-consideratio" class="xref">Implementation Considerations</a></p>
+<ul class="compact ulBare ulEmpty toc">
+<li class="compact ulBare ulEmpty toc" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>.  <a href="#name-loss-detection" class="xref">Loss Detection</a></p>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="xref">11</a>. <a href="#name-normative-references" class="xref">Normative References</a></p>
+              <li class="compact ulBare ulEmpty toc" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>.  <a href="#name-new-connections" class="xref">New Connections</a></p>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="xref">Appendix A</a>.  <a href="#name-change-log" class="xref">Change Log</a></p>
+              <li class="compact ulBare ulEmpty toc" id="section-toc.1-1.9.2.3">
+                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="xref">9.3</a>.  <a href="#name-window-based-congestion-con" class="xref">Window-based Congestion Controllers</a></p>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a></p>
+            </ul>
 </li>
-          <li class="compact toc ulEmpty ulBare" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a></p>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-security-considerations" class="xref">Security Considerations</a></p>
+</li>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="xref">11</a>. <a href="#name-iana-considerations" class="xref">IANA Considerations</a></p>
+</li>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="xref">12</a>. <a href="#name-normative-references" class="xref">Normative References</a></p>
+</li>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="xref">Appendix A</a>.  <a href="#name-change-log" class="xref">Change Log</a></p>
+</li>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-B" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a></p>
+</li>
+          <li class="ulBare compact toc ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-C" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1236,7 +1250,7 @@ such links, reducing the number of acknowledgments allows connection
 throughput to scale much further.<a href="#section-2-3.3" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-2-4">As discussed in <a href="#implementation" class="xref">Section 8</a> however, there are undesirable consequences
+<p id="section-2-4">As discussed in <a href="#implementation" class="xref">Section 9</a> however, there are undesirable consequences
 to congestion control and loss recovery if a receiver uniltaerally reduces the
 acknowledgment frequency. A sender's constraints on the acknowledgement
 frequency need to be taken into account to maximize congestion controller and
@@ -1260,9 +1274,7 @@ sending the following transport parameter (Section 7.2 of <span>[<a href="#QUIC-
 min_ack_delay (0xff02de1a):  </dt>
         <dd style="margin-left: 1.5em" id="section-3-2.2">
           <p id="section-3-2.2.1">A variable-length integer representing the minimum amount of time in
-microseconds by which the endpoint can delay an acknowledgement. Values of
-2^24 or greater are invalid, and receipt of these values MUST be treated as
-a connection error of type TRANSPORT_PARAMETER_ERROR.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+microseconds by which the endpoint can delay an acknowledgement.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -1279,17 +1291,41 @@ sends the min_ack_delay transport parameter or not.<a href="#section-3-4" class=
 <p id="section-3-5">This Transport Parameter is encoded as per Section 18 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>.<a href="#section-3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="ackfrequency-frame">
+<div id="immediateack-frame">
 <section id="section-4">
-      <h2 id="name-ack_frequency-frame">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-ack_frequency-frame" class="section-name selfRef">ACK_FREQUENCY Frame</a>
+      <h2 id="name-immediate_ack-frame">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-immediate_ack-frame" class="section-name selfRef">IMMEDIATE_ACK Frame</a>
       </h2>
-<p id="section-4-1">Delaying acknowledgements as much as possible reduces both work done by the
+<p id="section-4-1">The IMMEDIATE_ACK Frame is a frame which causes the peer to send a
+packet containing an ACK frame immediately, similar to the receipt of Initial
+and Handshake packets during the QUIC handshake.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">Receivers of the IMMEDIATE_ACK frame MAY choose to delay sending the ACK
+if the vast majority of received packets contain an IMMEDIATE_ACK or the
+receiver is under heavy load.  Senders MAY include multiple IMMEDIATE_ACK
+frames in a single QUIC packet, but the behavior is identical to a single
+IMMEDIATE_ACK frame.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-4-3">
+<pre>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            0xia (i)                         ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre><a href="#section-4-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="ackfrequency-frame">
+<section id="section-5">
+      <h2 id="name-ack_frequency-frame">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-ack_frequency-frame" class="section-name selfRef">ACK_FREQUENCY Frame</a>
+      </h2>
+<p id="section-5-1">Delaying acknowledgements as much as possible reduces both work done by the
 endpoints and network load. An endpoint's loss detection and congestion control
 mechanisms however need to be tolerant of this delay at the peer. An endpoint
 signals the frequency it wants to receive ACK frames to its peer using an
-ACK_FREQUENCY frame, shown below:<a href="#section-4-1" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-4-2">
+ACK_FREQUENCY frame, shown below:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5-2">
 <pre>
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1298,219 +1334,221 @@ ACK_FREQUENCY frame, shown below:<a href="#section-4-1" class="pilcrow">¶</a></
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                      Sequence Number (i)                    ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                  ACK-eliciting threshold (i)                ...
+|                  Ack-Eliciting Threshold (i)                ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                    Update Max Ack Delay (i)                 ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 | Ignore Order (8)|
 +-+-+-+-+-+-+-+-+-+
-</pre><a href="#section-4-2" class="pilcrow">¶</a>
+</pre><a href="#section-5-2" class="pilcrow">¶</a>
 </div>
-<p id="section-4-3">Following the common frame format described in Section 12.4 of
+<p id="section-5-3">Following the common frame format described in Section 12.4 of
 <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>, ACK_FREQUENCY frames have a type of 0xaf, and contain the
-following fields:<a href="#section-4-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-4-4">
-        <dt id="section-4-4.1">
+following fields:<a href="#section-5-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-5-4">
+        <dt id="section-5-4.1">
 Sequence Number:  </dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.2">
-          <p id="section-4-4.2.1">A variable-length integer representing the sequence number assigned to the
+        <dd style="margin-left: 1.5em" id="section-5-4.2">
+          <p id="section-5-4.2.1">A variable-length integer representing the sequence number assigned to the
 ACK_FREQUENCY frame by the sender to allow receivers to ignore obsolete
-frames, see <a href="#multiple-frames" class="xref">Section 5</a>.<a href="#section-4-4.2.1" class="pilcrow">¶</a></p>
+frames, see <a href="#multiple-frames" class="xref">Section 6</a>.<a href="#section-5-4.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-4-4.3">
-ACK-eliciting threshold:  </dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.4">
-          <p id="section-4-4.4.1">A variable-length integer representing the maximum number of ack-eliciting
+<dt id="section-5-4.3">
+Ack-Eliciting Threshold:  </dt>
+        <dd style="margin-left: 1.5em" id="section-5-4.4">
+          <p id="section-5-4.4.1">A variable-length integer representing the maximum number of ack-eliciting
 packets after which the receiver sends an acknowledgement. A value of 1 will
 result in an acknowledgement being sent for every ack-eliciting packet
 received. A value of 0 is invalid. Receipt of an invalid value MUST be
 treated as a connection error of type FRAME_ENCODING_ERROR.  If an endpoint
 receives an ACK-eliciting threshold value that is larger than the maximum
 value it can represent, the endpoint MUST use the largest representable
-value instead.<a href="#section-4-4.4.1" class="pilcrow">¶</a></p>
+value instead.<a href="#section-5-4.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-4-4.5">
+<dt id="section-5-4.5">
 Update Max Ack Delay:  </dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.6">
-          <p id="section-4-4.6.1">A variable-length integer representing an update to the peer's <code>max_ack_delay</code>
+        <dd style="margin-left: 1.5em" id="section-5-4.6">
+          <p id="section-5-4.6.1">A variable-length integer representing an update to the peer's <code>max_ack_delay</code>
 transport parameter (Section 18.2 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>). The value of this
-field is in microseconds. Any value smaller than the <code>min_ack_delay</code>
-advertised by this endpoint is invalid. Receipt of an invalid value MUST be
-treated as a connection error of type PROTOCOL_VIOLATION.<a href="#section-4-4.6.1" class="pilcrow">¶</a></p>
+field is in microseconds. Any value larger than 16,383,000 microseconds is
+invalid, as specified for the <code>max_ack_delay</code> transport parameter. Any value
+smaller than the <code>min_ack_delay</code> advertised by this endpoint is
+invalid. Receipt of an invalid value MUST be treated as a connection error of
+type PROTOCOL_VIOLATION.<a href="#section-5-4.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-4-4.7">
+<dt id="section-5-4.7">
 Ignore Order:  </dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.8">
-          <p id="section-4-4.8.1">An 8-bit field representing a boolean truth value. This field MUST have the
+        <dd style="margin-left: 1.5em" id="section-5-4.8">
+          <p id="section-5-4.8.1">An 8-bit field representing a boolean truth value. This field MUST have the
 value 0x00 (representing <code>false</code>) or 0x01 (representing <code>true</code>). This field
 can be set to <code>true</code> by an endpoint that does not wish to receive an immediate
-acknowledgement when the peer observes reordering (<a href="#reordering" class="xref">Section 6.1</a>). Receipt
+acknowledgement when the peer observes reordering (<a href="#reordering" class="xref">Section 7.1</a>). Receipt
 of any other value MUST be treated as a connection error of type
-FRAME_ENCODING_ERROR.<a href="#section-4-4.8.1" class="pilcrow">¶</a></p>
+FRAME_ENCODING_ERROR.<a href="#section-5-4.8.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-4-5">ACK_FREQUENCY frames are ack-eliciting. However, their loss does not require
+<p id="section-5-5">ACK_FREQUENCY frames are ack-eliciting. However, their loss does not require
 retransmission if an ACK_FREQUENCY frame with a larger Sequence Number value
-has been sent.<a href="#section-4-5" class="pilcrow">¶</a></p>
-<p id="section-4-6">An endpoint MAY send ACK_FREQUENCY frames multiple times during a connection and
-with different values.<a href="#section-4-6" class="pilcrow">¶</a></p>
-<p id="section-4-7">An endpoint will have committed a <code>max_ack_delay</code> value to the peer, which
+has been sent.<a href="#section-5-5" class="pilcrow">¶</a></p>
+<p id="section-5-6">An endpoint MAY send ACK_FREQUENCY frames multiple times during a connection and
+with different values.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">An endpoint will have committed a <code>max_ack_delay</code> value to the peer, which
 specifies the maximum amount of time by which the endpoint will delay sending
 acknowledgments. When the endpoint receives an ACK_FREQUENCY frame, it MUST
 update this maximum time to the value proposed by the peer in the Update Max Ack
-Delay field.<a href="#section-4-7" class="pilcrow">¶</a></p>
+Delay field.<a href="#section-5-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="multiple-frames">
-<section id="section-5">
+<section id="section-6">
       <h2 id="name-multiple-ack_frequency-fram">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-multiple-ack_frequency-fram" class="section-name selfRef">Multiple ACK_FREQUENCY Frames</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-multiple-ack_frequency-fram" class="section-name selfRef">Multiple ACK_FREQUENCY Frames</a>
       </h2>
-<p id="section-5-1">An endpoint can send multiple ACK_FREQUENCY frames, and each one of them can
+<p id="section-6-1">An endpoint can send multiple ACK_FREQUENCY frames, and each one of them can
 have different values in all fields. An endpoint MUST use a sequence number of 0
 for the first ACK_FREQUENCY frame it constructs and sends, and a strictly
-increasing value thereafter.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">An endpoint MUST allow reordered ACK_FREQUENCY frames to be received and
-processed, see Section 13.3 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">On the first received ACK_FREQUENCY frame in a connection, an endpoint MUST
+increasing value thereafter.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">An endpoint MUST allow reordered ACK_FREQUENCY frames to be received and
+processed, see Section 13.3 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">On the first received ACK_FREQUENCY frame in a connection, an endpoint MUST
 immediately record all values from the frame. The sequence number of the frame
-is recorded as the largest seen sequence number. The new ACK-eliciting Threshold
+is recorded as the largest seen sequence number. The new Ack-Eliciting Threshold
 and Update Max Ack Delay values MUST be immediately used for delaying
-acknowledgements; see <a href="#sending" class="xref">Section 6</a>.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">On a subsequently received ACK_FREQUENCY frame, the endpoint MUST check if this
-frame is more recent than any previous ones, as follows:<a href="#section-5-4" class="pilcrow">¶</a></p>
+acknowledgements; see <a href="#sending" class="xref">Section 7</a>.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">On a subsequently received ACK_FREQUENCY frame, the endpoint MUST check if this
+frame is more recent than any previous ones, as follows:<a href="#section-6-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-5.1">If the frame's sequence number is not greater than the largest one seen so
-far, the endpoint MUST ignore this frame.<a href="#section-5-5.1" class="pilcrow">¶</a>
+<li class="normal" id="section-6-5.1">If the frame's sequence number is not greater than the largest one seen so
+far, the endpoint MUST ignore this frame.<a href="#section-6-5.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-5-5.2">If the frame's sequence number is greater than the largest one seen so far,
+        <li class="normal" id="section-6-5.2">If the frame's sequence number is greater than the largest one seen so far,
 the endpoint MUST immediately replace old recorded state with values received
 in this frame. The endpoint MUST start using the new values immediately for
-delaying acknowledgements; see <a href="#sending" class="xref">Section 6</a>. The endpoint MUST also replace the
-recorded sequence number.<a href="#section-5-5.2" class="pilcrow">¶</a>
+delaying acknowledgements; see <a href="#sending" class="xref">Section 7</a>. The endpoint MUST also replace the
+recorded sequence number.<a href="#section-6-5.2" class="pilcrow">¶</a>
 </li>
       </ul>
 </section>
 </div>
 <div id="sending">
-<section id="section-6">
+<section id="section-7">
       <h2 id="name-sending-acknowledgments">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-sending-acknowledgments" class="section-name selfRef">Sending Acknowledgments</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-sending-acknowledgments" class="section-name selfRef">Sending Acknowledgments</a>
       </h2>
-<p id="section-6-1">Prior to receiving an ACK_FREQUENCY frame, endpoints send acknowledgements as
-specified in Section 13.2.1 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">On receiving an ACK_FREQUENCY frame and updating its recorded <code>max_ack_delay</code>
-and <code>ACK-eliciting threshold</code> values (<a href="#multiple-frames" class="xref">Section 5</a>), the endpoint MUST send an
-acknowledgement when one of the following conditions are met:<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-7-1">Prior to receiving an ACK_FREQUENCY frame, endpoints send acknowledgements as
+specified in Section 13.2.1 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">On receiving an ACK_FREQUENCY frame and updating its recorded <code>max_ack_delay</code>
+and <code>Ack-Eliciting Threshold</code> values (<a href="#multiple-frames" class="xref">Section 6</a>), the endpoint MUST send an
+acknowledgement when one of the following conditions are met:<a href="#section-7-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6-3.1">Since the last acknowledgement was sent, the number of received ack-eliciting
-packets is greater than or equal to the recorded <code>ACK-eliciting threshold</code>.<a href="#section-6-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-7-3.1">Since the last acknowledgement was sent, the number of received ack-eliciting
+packets is greater than or equal to the recorded <code>Ack-Eliciting Threshold</code>.<a href="#section-7-3.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-6-3.2">Since the last acknowledgement was sent, <code>max_ack_delay</code> amount of time has
-passed.<a href="#section-6-3.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-7-3.2">Since the last acknowledgement was sent, <code>max_ack_delay</code> amount of time has
+passed.<a href="#section-7-3.2" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-6-4"><a href="#reordering" class="xref">Section 6.1</a>, <a href="#congestion" class="xref">Section 6.2</a>, and <a href="#batch" class="xref">Section 6.3</a> describe exceptions to this
-strategy.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">An endpoint is expected to bundle acknowledgements when possible. Every time an
+<p id="section-7-4"><a href="#reordering" class="xref">Section 7.1</a>, <a href="#congestion" class="xref">Section 7.2</a>, and <a href="#batch" class="xref">Section 7.3</a> describe exceptions to this
+strategy.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">An endpoint is expected to bundle acknowledgements when possible. Every time an
 acknowledgement is sent, bundled or otherwise, all counters and timers related
-to delaying of acknowledgments are reset.<a href="#section-6-5" class="pilcrow">¶</a></p>
+to delaying of acknowledgments are reset.<a href="#section-7-5" class="pilcrow">¶</a></p>
 <div id="reordering">
-<section id="section-6.1">
+<section id="section-7.1">
         <h3 id="name-response-to-reordering">
-<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-response-to-reordering" class="section-name selfRef">Response to Reordering</a>
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-response-to-reordering" class="section-name selfRef">Response to Reordering</a>
         </h3>
-<p id="section-6.1-1">As specified in Section 13.2.1 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>, endpoints are expected to
+<p id="section-7.1-1">As specified in Section 13.2.1 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>, endpoints are expected to
 send an acknowledgement immediately on receiving a reordered ack-eliciting
-packet. This extension modifies this behavior.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">If the endpoint has not yet received an ACK_FREQUENCY frame, or if the most
+packet. This extension modifies this behavior.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">If the endpoint has not yet received an ACK_FREQUENCY frame, or if the most
 recent frame received from the peer has an <code>Ignore Order</code> value of <code>false</code>
 (0x00), the endpoint MUST immediately acknowledge any subsequent packets that
-are received out of order.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
-<p id="section-6.1-3">If the most recent ACK_FREQUENCY frame received from the peer has an <code>Ignore
+are received out of order.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">If the most recent ACK_FREQUENCY frame received from the peer has an <code>Ignore
 Order</code> value of <code>true</code> (0x01), the endpoint does not make this exception. That
 is, the endpoint MUST NOT send an immediate acknowledgement in response to
 packets received out of order, and instead continues to use the peer's
-<code>ACK-eliciting threshold</code> and <code>max_ack_delay</code> thresholds for sending
-acknowledgements.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+<code>Ack-Eliciting Threshold</code> and <code>max_ack_delay</code> thresholds for sending
+acknowledgements.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="congestion">
-<section id="section-6.2">
+<section id="section-7.2">
         <h3 id="name-expediting-congestion-signa">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-expediting-congestion-signa" class="section-name selfRef">Expediting Congestion Signals</a>
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-expediting-congestion-signa" class="section-name selfRef">Expediting Congestion Signals</a>
         </h3>
-<p id="section-6.2-1">As specified in Section 13.2.1 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>, an endpoint SHOULD
+<p id="section-7.2-1">As specified in Section 13.2.1 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>, an endpoint SHOULD
 immediately acknowledge packets marked with the ECN Congestion Experienced (CE)
 codepoint in the IP header. Doing so reduces the peer's response time to
-congestion events.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+congestion events.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="batch">
-<section id="section-6.3">
+<section id="section-7.3">
         <h3 id="name-batch-processing-of-packets">
-<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-batch-processing-of-packets" class="section-name selfRef">Batch Processing of Packets</a>
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-batch-processing-of-packets" class="section-name selfRef">Batch Processing of Packets</a>
         </h3>
-<p id="section-6.3-1">For performance reasons, an endpoint can receive incoming packets from the
+<p id="section-7.3-1">For performance reasons, an endpoint can receive incoming packets from the
 underlying platform in a batch of multiple packets. This batch can contain
-enough packets to cause multiple acknowledgements to be sent.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3-2">To avoid sending multiple acknowledgements in rapid succession, an endpoint MAY
+enough packets to cause multiple acknowledgements to be sent.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">To avoid sending multiple acknowledgements in rapid succession, an endpoint MAY
 process all packets in a batch before determining whether a threshold has been
-met and an acknowledgement is to be sent in response.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+met and an acknowledgement is to be sent in response.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="computation-of-probe-timeout-period">
-<section id="section-7">
+<section id="section-8">
       <h2 id="name-computation-of-probe-timeou">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-computation-of-probe-timeou" class="section-name selfRef">Computation of Probe Timeout Period</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-computation-of-probe-timeou" class="section-name selfRef">Computation of Probe Timeout Period</a>
       </h2>
-<p id="section-7-1">On sending an update to the peer's <code>max_ack_delay</code>, an endpoint can use this new
+<p id="section-8-1">On sending an update to the peer's <code>max_ack_delay</code>, an endpoint can use this new
 value in later computations of its Probe Timeout (PTO) period; see Section 5.2.1
 of <span>[<a href="#QUIC-RECOVERY" class="xref">QUIC-RECOVERY</a>]</span>. The endpoint MUST however wait until the ACK_FREQUENCY
-frame that carries this new value is acknowledged by the peer.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">Until the frame is acknowledged, the endpoint MUST use the greater of the
+frame that carries this new value is acknowledged by the peer.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">Until the frame is acknowledged, the endpoint MUST use the greater of the
 current <code>max_ack_delay</code> and the value that is in flight when computing the PTO
 period. Doing so avoids spurious PTOs that can be caused by an update that
-increases the peer's <code>max_ack_delay</code>.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">While it is expected that endpoints will have only one ACK_FREQUENCY frame in
+increases the peer's <code>max_ack_delay</code>.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">While it is expected that endpoints will have only one ACK_FREQUENCY frame in
 flight at any given time, this extension does not prohibit having more than one
 in flight. Generally, when using <code>max_ack_delay</code> for PTO computations, endpoints
-MUST use the maximum of the current value and all those in flight.<a href="#section-7-3" class="pilcrow">¶</a></p>
+MUST use the maximum of the current value and all those in flight.<a href="#section-8-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="implementation">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-implementation-consideratio">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
       </h2>
-<p id="section-8-1">There are tradeoffs inherent in a sender sending an ACK_FREQUENCY frame to the
+<p id="section-9-1">There are tradeoffs inherent in a sender sending an ACK_FREQUENCY frame to the
 receiver.  As such it is recommended that implementers experiment with different
 strategies and find those which best suit their applications and congestion
 controllers.  There are, however, noteworthy considerations when devising
-strategies for sending ACK_FREQUENCY frames.<a href="#section-8-1" class="pilcrow">¶</a></p>
+strategies for sending ACK_FREQUENCY frames.<a href="#section-9-1" class="pilcrow">¶</a></p>
 <div id="loss">
-<section id="section-8.1">
+<section id="section-9.1">
         <h3 id="name-loss-detection">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-loss-detection" class="section-name selfRef">Loss Detection</a>
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-loss-detection" class="section-name selfRef">Loss Detection</a>
         </h3>
-<p id="section-8.1-1">A sender relies on receipt of acknowledgements to determine the amount of data
+<p id="section-9.1-1">A sender relies on receipt of acknowledgements to determine the amount of data
 in flight and to detect losses, e.g. when packets experience reordering, see
 <span>[<a href="#QUIC-RECOVERY" class="xref">QUIC-RECOVERY</a>]</span>.  Consequently, how often a receiver sends acknowledgments
-determines how long it takes for losses to be detected at the sender.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+determines how long it takes for losses to be detected at the sender.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="new-connections">
-<section id="section-8.2">
+<section id="section-9.2">
         <h3 id="name-new-connections">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-new-connections" class="section-name selfRef">New Connections</a>
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-new-connections" class="section-name selfRef">New Connections</a>
         </h3>
-<p id="section-8.2-1">Many congestion control algorithms have a startup mechanism during the beginning
+<p id="section-9.2-1">Many congestion control algorithms have a startup mechanism during the beginning
 phases of a connection.  It is typical that in this period the congestion
 controller will quickly increase the amount of data in the network until it is
 signalled to stop.  While the mechanism used to achieve this increase varies,
@@ -1518,44 +1556,44 @@ acknowledgments by the peer are generally critical during this phase to drive
 the congestion controller's machinery.  A sender can send ACK_FREQUENCY frames
 while its congestion controller is in this state, ensuring that the receiver
 will send acknowledgments at a rate which is optimal for the the sender's
-congestion controller.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+congestion controller.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="window">
-<section id="section-8.3">
+<section id="section-9.3">
         <h3 id="name-window-based-congestion-con">
-<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-window-based-congestion-con" class="section-name selfRef">Window-based Congestion Controllers</a>
+<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-window-based-congestion-con" class="section-name selfRef">Window-based Congestion Controllers</a>
         </h3>
-<p id="section-8.3-1">Congestion controllers that are purely window-based and strictly adherent to
+<p id="section-9.3-1">Congestion controllers that are purely window-based and strictly adherent to
 packet conservation, such as the one defined in <span>[<a href="#QUIC-RECOVERY" class="xref">QUIC-RECOVERY</a>]</span>, rely on
 receipt of acknowledgments to move the congestion window forward and send
 additional data into the network.  Such controllers will suffer degraded
 performance if acknowledgments are delayed excessively.  Similarly, if these
 controllers rely on the timing of peer acknowledgments (an "ACK clock"),
-delaying acknowledgments will cause undesirable bursts of data into the network.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+delaying acknowledgments will cause undesirable bursts of data into the network.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-9">
-      <h2 id="name-security-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
-      </h2>
-<p id="section-9-1">TBD.<a href="#section-9-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="iana">
 <section id="section-10">
-      <h2 id="name-iana-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      <h2 id="name-security-considerations">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-10-1">TBD.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="iana">
 <section id="section-11">
+      <h2 id="name-iana-considerations">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-11-1">TBD.<a href="#section-11-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-12">
       <h2 id="name-normative-references">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
 <dt id="QUIC-RECOVERY">[QUIC-RECOVERY]</dt>
@@ -1583,8 +1621,8 @@ delaying acknowledgments will cause undesirable bursts of data into the network.
       </h2>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-A-1.1">
-          <strong>RFC Editor's Note:</strong> Please remove this section prior to publication of a
-final version of this document.<a href="#appendix-A-1.1" class="pilcrow">¶</a>
+          <p id="appendix-A-1.1.1"><strong>RFC Editor's Note:</strong> Please remove this section prior to publication of a
+final version of this document.<a href="#appendix-A-1.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>

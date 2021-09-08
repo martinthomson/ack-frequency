@@ -5,8 +5,8 @@
 QUIC                                                          J. Iyengar
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                I. Swett
-Expires: 25 January 2022                                          Google
-                                                            24 July 2021
+Expires: 12 March 2022                                            Google
+                                                        8 September 2021
 
 
                      QUIC Acknowledgement Frequency
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 January 2022.
+   This Internet-Draft will expire on 12 March 2022.
 
 Copyright Notice
 
@@ -67,20 +67,21 @@ Table of Contents
      1.1.  Terms and Definitions
    2.  Motivation
    3.  Negotiating Extension Use
-   4.  ACK_FREQUENCY Frame
-   5.  Multiple ACK_FREQUENCY Frames
-   6.  Sending Acknowledgments
-     6.1.  Response to Reordering
-     6.2.  Expediting Congestion Signals
-     6.3.  Batch Processing of Packets
-   7.  Computation of Probe Timeout Period
-   8.  Implementation Considerations
-     8.1.  Loss Detection
-     8.2.  New Connections
-     8.3.  Window-based Congestion Controllers
-   9.  Security Considerations
-   10. IANA Considerations
-   11. Normative References
+   4.  IMMEDIATE_ACK Frame
+   5.  ACK_FREQUENCY Frame
+   6.  Multiple ACK_FREQUENCY Frames
+   7.  Sending Acknowledgments
+     7.1.  Response to Reordering
+     7.2.  Expediting Congestion Signals
+     7.3.  Batch Processing of Packets
+   8.  Computation of Probe Timeout Period
+   9.  Implementation Considerations
+     9.1.  Loss Detection
+     9.2.  New Connections
+     9.3.  Window-based Congestion Controllers
+   10. Security Considerations
+   11. IANA Considerations
+   12. Normative References
    Appendix A.  Change Log
    Acknowledgments
    Authors' Addresses
@@ -136,7 +137,7 @@ Table of Contents
       number of acknowledgments allows connection throughput to scale
       much further.
 
-   As discussed in Section 8 however, there are undesirable consequences
+   As discussed in Section 9 however, there are undesirable consequences
    to congestion control and loss recovery if a receiver uniltaerally
    reduces the acknowledgment frequency.  A sender's constraints on the
    acknowledgement frequency need to be taken into account to maximize
@@ -156,9 +157,7 @@ Table of Contents
 
    min_ack_delay (0xff02de1a):  A variable-length integer representing
       the minimum amount of time in microseconds by which the endpoint
-      can delay an acknowledgement.  Values of 2^24 or greater are
-      invalid, and receipt of these values MUST be treated as a
-      connection error of type TRANSPORT_PARAMETER_ERROR.
+      can delay an acknowledgement.
 
    An endpoint's min_ack_delay MUST NOT be greater than its
    max_ack_delay.  Endpoints that support this extension MUST treat
@@ -177,7 +176,25 @@ Table of Contents
    This Transport Parameter is encoded as per Section 18 of
    [QUIC-TRANSPORT].
 
-4.  ACK_FREQUENCY Frame
+4.  IMMEDIATE_ACK Frame
+
+   The IMMEDIATE_ACK Frame is a frame which causes the peer to send a
+   packet containing an ACK frame immediately, similar to the receipt of
+   Initial and Handshake packets during the QUIC handshake.
+
+   Receivers of the IMMEDIATE_ACK frame MAY choose to delay sending the
+   ACK if the vast majority of received packets contain an IMMEDIATE_ACK
+   or the receiver is under heavy load.  Senders MAY include multiple
+   IMMEDIATE_ACK frames in a single QUIC packet, but the behavior is
+   identical to a single IMMEDIATE_ACK frame.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            0xia (i)                         ...
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+5.  ACK_FREQUENCY Frame
 
    Delaying acknowledgements as much as possible reduces both work done
    by the endpoints and network load.  An endpoint's loss detection and
@@ -193,7 +210,7 @@ Table of Contents
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                      Sequence Number (i)                    ...
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                  ACK-eliciting threshold (i)                ...
+   |                  Ack-Eliciting Threshold (i)                ...
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                    Update Max Ack Delay (i)                 ...
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -206,9 +223,9 @@ Table of Contents
 
    Sequence Number:  A variable-length integer representing the sequence
       number assigned to the ACK_FREQUENCY frame by the sender to allow
-      receivers to ignore obsolete frames, see Section 5.
+      receivers to ignore obsolete frames, see Section 6.
 
-   ACK-eliciting threshold:  A variable-length integer representing the
+   Ack-Eliciting Threshold:  A variable-length integer representing the
       maximum number of ack-eliciting packets after which the receiver
       sends an acknowledgement.  A value of 1 will result in an
       acknowledgement being sent for every ack-eliciting packet
@@ -222,16 +239,17 @@ Table of Contents
    Update Max Ack Delay:  A variable-length integer representing an
       update to the peer's "max_ack_delay" transport parameter
       (Section 18.2 of [QUIC-TRANSPORT]).  The value of this field is in
-      microseconds.  Any value smaller than the "min_ack_delay"
-      advertised by this endpoint is invalid.  Receipt of an invalid
-      value MUST be treated as a connection error of type
-      PROTOCOL_VIOLATION.
+      microseconds.  Any value larger than 16,383,000 microseconds is
+      invalid, as specified for the "max_ack_delay" transport parameter.
+      Any value smaller than the "min_ack_delay" advertised by this
+      endpoint is invalid.  Receipt of an invalid value MUST be treated
+      as a connection error of type PROTOCOL_VIOLATION.
 
    Ignore Order:  An 8-bit field representing a boolean truth value.
       This field MUST have the value 0x00 (representing "false") or 0x01
       (representing "true").  This field can be set to "true" by an
       endpoint that does not wish to receive an immediate
-      acknowledgement when the peer observes reordering (Section 6.1).
+      acknowledgement when the peer observes reordering (Section 7.1).
       Receipt of any other value MUST be treated as a connection error
       of type FRAME_ENCODING_ERROR.
 
@@ -248,7 +266,7 @@ Table of Contents
    ACK_FREQUENCY frame, it MUST update this maximum time to the value
    proposed by the peer in the Update Max Ack Delay field.
 
-5.  Multiple ACK_FREQUENCY Frames
+6.  Multiple ACK_FREQUENCY Frames
 
    An endpoint can send multiple ACK_FREQUENCY frames, and each one of
    them can have different values in all fields.  An endpoint MUST use a
@@ -261,9 +279,9 @@ Table of Contents
    On the first received ACK_FREQUENCY frame in a connection, an
    endpoint MUST immediately record all values from the frame.  The
    sequence number of the frame is recorded as the largest seen sequence
-   number.  The new ACK-eliciting Threshold and Update Max Ack Delay
+   number.  The new Ack-Eliciting Threshold and Update Max Ack Delay
    values MUST be immediately used for delaying acknowledgements; see
-   Section 6.
+   Section 7.
 
    On a subsequently received ACK_FREQUENCY frame, the endpoint MUST
    check if this frame is more recent than any previous ones, as
@@ -276,34 +294,34 @@ Table of Contents
       seen so far, the endpoint MUST immediately replace old recorded
       state with values received in this frame.  The endpoint MUST start
       using the new values immediately for delaying acknowledgements;
-      see Section 6.  The endpoint MUST also replace the recorded
+      see Section 7.  The endpoint MUST also replace the recorded
       sequence number.
 
-6.  Sending Acknowledgments
+7.  Sending Acknowledgments
 
    Prior to receiving an ACK_FREQUENCY frame, endpoints send
    acknowledgements as specified in Section 13.2.1 of [QUIC-TRANSPORT].
 
    On receiving an ACK_FREQUENCY frame and updating its recorded
-   "max_ack_delay" and "ACK-eliciting threshold" values (Section 5), the
+   "max_ack_delay" and "Ack-Eliciting Threshold" values (Section 6), the
    endpoint MUST send an acknowledgement when one of the following
    conditions are met:
 
    *  Since the last acknowledgement was sent, the number of received
       ack-eliciting packets is greater than or equal to the recorded
-      "ACK-eliciting threshold".
+      "Ack-Eliciting Threshold".
 
    *  Since the last acknowledgement was sent, "max_ack_delay" amount of
       time has passed.
 
-   Section 6.1, Section 6.2, and Section 6.3 describe exceptions to this
+   Section 7.1, Section 7.2, and Section 7.3 describe exceptions to this
    strategy.
 
    An endpoint is expected to bundle acknowledgements when possible.
    Every time an acknowledgement is sent, bundled or otherwise, all
    counters and timers related to delaying of acknowledgments are reset.
 
-6.1.  Response to Reordering
+7.1.  Response to Reordering
 
    As specified in Section 13.2.1 of [QUIC-TRANSPORT], endpoints are
    expected to send an acknowledgement immediately on receiving a
@@ -319,17 +337,17 @@ Table of Contents
    "Ignore Order" value of "true" (0x01), the endpoint does not make
    this exception.  That is, the endpoint MUST NOT send an immediate
    acknowledgement in response to packets received out of order, and
-   instead continues to use the peer's "ACK-eliciting threshold" and
+   instead continues to use the peer's "Ack-Eliciting Threshold" and
    "max_ack_delay" thresholds for sending acknowledgements.
 
-6.2.  Expediting Congestion Signals
+7.2.  Expediting Congestion Signals
 
    As specified in Section 13.2.1 of [QUIC-TRANSPORT], an endpoint
    SHOULD immediately acknowledge packets marked with the ECN Congestion
    Experienced (CE) codepoint in the IP header.  Doing so reduces the
    peer's response time to congestion events.
 
-6.3.  Batch Processing of Packets
+7.3.  Batch Processing of Packets
 
    For performance reasons, an endpoint can receive incoming packets
    from the underlying platform in a batch of multiple packets.  This
@@ -341,7 +359,7 @@ Table of Contents
    whether a threshold has been met and an acknowledgement is to be sent
    in response.
 
-7.  Computation of Probe Timeout Period
+8.  Computation of Probe Timeout Period
 
    On sending an update to the peer's "max_ack_delay", an endpoint can
    use this new value in later computations of its Probe Timeout (PTO)
@@ -360,7 +378,7 @@ Table of Contents
    "max_ack_delay" for PTO computations, endpoints MUST use the maximum
    of the current value and all those in flight.
 
-8.  Implementation Considerations
+9.  Implementation Considerations
 
    There are tradeoffs inherent in a sender sending an ACK_FREQUENCY
    frame to the receiver.  As such it is recommended that implementers
@@ -369,7 +387,7 @@ Table of Contents
    noteworthy considerations when devising strategies for sending
    ACK_FREQUENCY frames.
 
-8.1.  Loss Detection
+9.1.  Loss Detection
 
    A sender relies on receipt of acknowledgements to determine the
    amount of data in flight and to detect losses, e.g. when packets
@@ -377,7 +395,7 @@ Table of Contents
    a receiver sends acknowledgments determines how long it takes for
    losses to be detected at the sender.
 
-8.2.  New Connections
+9.2.  New Connections
 
    Many congestion control algorithms have a startup mechanism during
    the beginning phases of a connection.  It is typical that in this
@@ -390,7 +408,7 @@ Table of Contents
    that the receiver will send acknowledgments at a rate which is
    optimal for the the sender's congestion controller.
 
-8.3.  Window-based Congestion Controllers
+9.3.  Window-based Congestion Controllers
 
    Congestion controllers that are purely window-based and strictly
    adherent to packet conservation, such as the one defined in
@@ -402,15 +420,15 @@ Table of Contents
    acknowledgments will cause undesirable bursts of data into the
    network.
 
-9.  Security Considerations
+10.  Security Considerations
 
    TBD.
 
-10.  IANA Considerations
+11.  IANA Considerations
 
    TBD.
 
-11.  Normative References
+12.  Normative References
 
    [QUIC-RECOVERY]
               Iyengar, J., Ed. and I. Swett, Ed., "QUIC Loss Detection
