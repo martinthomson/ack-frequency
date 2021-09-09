@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-08-05T00:50:58.645868+00:00",
+  "timestamp": "2021-09-09T00:53:51.228727+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -782,19 +782,18 @@
     {
       "number": 34,
       "id": "MDU6SXNzdWU1OTYzMDU2MzM=",
-      "title": "ignore_order vs. inducing ack on PTO",
+      "title": "ignore_order vs. inducing ack on PTO (aka IMMEDIATE_ACK)",
       "url": "https://github.com/quicwg/ack-frequency/issues/34",
       "state": "OPEN",
       "author": "kazuho",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [
-        "design",
-        "needs-pr"
+        "design"
       ],
       "body": "When sending a PTO packet, a sender wants to induce an immediate ACK. The only trick I know to induce such an ACK is intentionally skip the packet number.\r\n\r\nHowever, the problem of that approach is that it relies on the receiver not ignoring reorders.\r\n\r\nWhen an ACK_FREQUENCY frame previously sent had set the `ignore_order` bit, then it become impossible for a sender to induce an immediate ACK when sending a PTO packet.\r\n\r\nAt the moment, the only solution is to bundle an ACK_FREQUENCY packet in each PTO packet, but that seems like a bit of unnecessary overhead to me. Should we have a dedicated frame for inducing immediate ACKs instead?",
       "createdAt": "2020-04-08T04:48:29Z",
-      "updatedAt": "2021-08-04T21:14:57Z",
+      "updatedAt": "2021-09-08T12:30:44Z",
       "closedAt": null,
       "comments": [
         {
@@ -922,6 +921,13 @@
           "body": "IMMEDIATE_ACK sounds good to me. Alternatively, I'd be also fine with something like ACK_NOW.",
           "createdAt": "2021-08-04T21:14:56Z",
           "updatedAt": "2021-08-04T21:14:56Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "IMMEDIATE_ACK it is, PR coming.",
+          "createdAt": "2021-09-08T12:19:34Z",
+          "updatedAt": "2021-09-08T12:19:34Z"
         }
       ]
     },
@@ -1458,6 +1464,51 @@
           "body": "Thanks Magnus, the intent was to follow the RFC9000 definition, so I'll write a PR to clarify that was the intent.",
           "createdAt": "2021-07-27T20:49:50Z",
           "updatedAt": "2021-07-27T20:49:50Z"
+        }
+      ]
+    },
+    {
+      "number": 65,
+      "id": "MDU6SXNzdWU5OTEwODc4NTc=",
+      "title": "Should we add a NO_ACK frame?",
+      "url": "https://github.com/quicwg/ack-frequency/issues/65",
+      "state": "OPEN",
+      "author": "ianswett",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As a natural opposite to #34 adding an IMMEDIATE_ACK frame, I want to know if the WG thinks there's sufficient interest in this.  I know there are use cases like WebRTC where fine control over the ACKs is desirable.\r\n\r\n@nibanks may be interested in this, since a similar topic came up on https://github.com/quicwg/datagram/issues/42",
+      "createdAt": "2021-09-08T12:32:51Z",
+      "updatedAt": "2021-09-08T12:34:06Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 66,
+      "id": "MDU6SXNzdWU5OTEyODc3NDY=",
+      "title": "Change diagrams to use the notation in QUIC transport",
+      "url": "https://github.com/quicwg/ack-frequency/issues/66",
+      "state": "OPEN",
+      "author": "ianswett",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "ianswett"
+      ],
+      "labels": [
+        "editorial",
+        "needs-pr"
+      ],
+      "body": "They currently use ascii art.\r\n\r\nWill write this up once #64 is merged.",
+      "createdAt": "2021-09-08T15:50:00Z",
+      "updatedAt": "2021-09-08T16:10:33Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "MEMBER",
+          "body": "sgtm, thanks!",
+          "createdAt": "2021-09-08T16:10:33Z",
+          "updatedAt": "2021-09-08T16:10:33Z"
         }
       ]
     }
@@ -2577,25 +2628,33 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NDA3OTg3NTEx",
       "title": "Replace 'Ignore Order' with 'Packet Loss Threshold'",
       "url": "https://github.com/quicwg/ack-frequency/pull/36",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fixes #35 by specifying a 'Packet Loss Threshold' field which allows the sender of the frame to communicate the packet loss threshold to the receiver, avoiding unnecessary immediate ACKs and speeding up loss detection.",
       "createdAt": "2020-04-23T15:09:30Z",
-      "updatedAt": "2021-06-15T23:09:27Z",
+      "updatedAt": "2021-09-08T12:12:29Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "8ba2ebbc82a2259ee8dd3b995c06febb3e78a71d",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-packet-loss-threshold",
       "headRefOid": "ec27899e2dd6eca6b474c26d9e989de52f63df63",
-      "closedAt": null,
+      "closedAt": "2021-09-08T12:07:25Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The direction is to not add this unless there's clear justification of its value, so closing.  Also, it's clear the PR was confusing as written.",
+          "createdAt": "2021-09-08T12:12:29Z",
+          "updatedAt": "2021-09-08T12:12:29Z"
+        }
+      ],
       "reviews": [
         {
           "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDYzMDQ3MzU5",
@@ -3843,6 +3902,49 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 64,
+      "id": "MDExOlB1bGxSZXF1ZXN0NzI5NjAyNTY3",
+      "title": "Add an IMMEDIATE_ACK frame",
+      "url": "https://github.com/quicwg/ack-frequency/pull/64",
+      "state": "OPEN",
+      "author": "ianswett",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "design"
+      ],
+      "body": "Fixes #34 by adding a one byte IMMEDIATE_ACK frame.",
+      "createdAt": "2021-09-08T12:30:33Z",
+      "updatedAt": "2021-09-08T15:50:21Z",
+      "baseRepository": "quicwg/ack-frequency",
+      "baseRefName": "main",
+      "baseRefOid": "b8a834e72d9d14aa366e81fe5f9ddedd4bf73eb2",
+      "headRepository": "quicwg/ack-frequency",
+      "headRefName": "ianswett-immediate-ack",
+      "headRefOid": "2235bf41ec8f8c4fdc244454e06b6b468f599748",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "MEMBER",
+          "body": "editorial nit: my preference would be for frame diagrams to use the notation in QUIC transport. I see that ACK_FREQUENCY is defined using ASCII art, so perhaps you want to consider a separate follow up PR to switch styles after this lands.",
+          "createdAt": "2021-09-08T12:35:12Z",
+          "updatedAt": "2021-09-08T12:35:12Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks Lucas, I filed #66 to update them.",
+          "createdAt": "2021-09-08T15:50:21Z",
+          "updatedAt": "2021-09-08T15:50:21Z"
+        }
+      ],
+      "reviews": []
     }
   ]
 }
