@@ -5,8 +5,8 @@
 QUIC                                                          J. Iyengar
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                I. Swett
-Expires: 1 February 2022                                          Google
-                                                            31 July 2021
+Expires: 13 March 2022                                            Google
+                                                        9 September 2021
 
 
                      QUIC Acknowledgement Frequency
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 February 2022.
+   This Internet-Draft will expire on 13 March 2022.
 
 Copyright Notice
 
@@ -193,7 +193,7 @@ Table of Contents
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                  Ack-Eliciting Threshold (i)                ...
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Update Max Ack Delay (i)                 ...
+   |                    Request Max Ack Delay (i)                ...
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    | Ignore Order (8)|
    +-+-+-+-+-+-+-+-+-+
@@ -217,14 +217,14 @@ Table of Contents
       represent, the endpoint MUST use the largest representable value
       instead.
 
-   Update Max Ack Delay:  A variable-length integer representing an
-      update to the peer's "max_ack_delay" transport parameter
-      (Section 18.2 of [QUIC-TRANSPORT]).  The value of this field is in
-      microseconds.  Any value larger than 16,383,000 microseconds is
-      invalid, as specified for the "max_ack_delay" transport parameter.
-      Any value smaller than the "min_ack_delay" advertised by this
-      endpoint is invalid.  Receipt of an invalid value MUST be treated
-      as a connection error of type PROTOCOL_VIOLATION.
+   Request Max Ack Delay:  A variable-length integer representing the
+      value to which the endpoint requests the peer update its
+      "max_ack_delay" (Section 18.2 of [QUIC-TRANSPORT]).  The value of
+      this field is in microseconds, unlike the 'max_ack_delay'
+      transport parameter, which is in milliseconds.  Sending a value
+      smaller than the "min_ack_delay" advertised by the peer is
+      invalid.  Receipt of an invalid value MUST be treated as a
+      connection error of type PROTOCOL_VIOLATION.
 
    Ignore Order:  An 8-bit field representing a boolean truth value.
       This field MUST have the value 0x00 (representing "false") or 0x01
@@ -245,7 +245,7 @@ Table of Contents
    which specifies the maximum amount of time by which the endpoint will
    delay sending acknowledgments.  When the endpoint receives an
    ACK_FREQUENCY frame, it MUST update this maximum time to the value
-   proposed by the peer in the Update Max Ack Delay field.
+   proposed by the peer in the Request Max Ack Delay field.
 
 5.  Multiple ACK_FREQUENCY Frames
 
@@ -260,7 +260,7 @@ Table of Contents
    On the first received ACK_FREQUENCY frame in a connection, an
    endpoint MUST immediately record all values from the frame.  The
    sequence number of the frame is recorded as the largest seen sequence
-   number.  The new Ack-Eliciting Threshold and Update Max Ack Delay
+   number.  The new Ack-Eliciting Threshold and Request Max Ack Delay
    values MUST be immediately used for delaying acknowledgements; see
    Section 6.
 
