@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-09-09T00:53:51.228727+00:00",
+  "timestamp": "2021-09-12T00:53:37.410550+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -387,7 +387,7 @@
       "id": "MDU6SXNzdWU1NTcxMzQ4MDM=",
       "title": "Specify in which packets ACK_FREQUENCY may appear",
       "url": "https://github.com/quicwg/ack-frequency/issues/22",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "dtikhonov",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -396,8 +396,8 @@
       ],
       "body": "See Table in [Section 12.4](https://tools.ietf.org/html/draft-ietf-quic-transport-25#section-12.4) of the transport draft.",
       "createdAt": "2020-01-29T21:46:27Z",
-      "updatedAt": "2021-08-02T05:18:55Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-10T16:15:48Z",
+      "closedAt": "2021-09-10T16:15:48Z",
       "comments": [
         {
           "author": "kazuho",
@@ -553,7 +553,7 @@
       "id": "MDU6SXNzdWU1NTg3Njk1NDE=",
       "title": "what between false start and handshake done?",
       "url": "https://github.com/quicwg/ack-frequency/issues/25",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "huitema",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -563,8 +563,8 @@
       ],
       "body": "I found an interesting regression when implementing the delayed ack extension. The extension allows the sender of the data to control the max ack delay and the ack gap. In general that's a good idea, but not for the 2 RTT of the connection. Once the client obtains the 1RTT key, it will start receiving data sent by the server in \"false start\". At that point the client has assessed the RTT of the connection, but the server has not. The \"max ack delay\" sent by the server is a guess based on statistics. It will typically be longer than recommended values like RTT/4. The effect is that the first ACKs are sent too late, which  has a cascading effect with some congestion control algorithms.\r\n\r\nMy fix was to use the values locally computed by the client until the session is confirmed and the server can send accurate \"ack frequency\" frames. Not sure whether we should have text about that in the draft.",
       "createdAt": "2020-02-02T22:36:49Z",
-      "updatedAt": "2021-07-23T19:52:12Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-10T16:23:50Z",
+      "closedAt": "2021-09-10T16:23:50Z",
       "comments": [
         {
           "author": "ianswett",
@@ -936,7 +936,7 @@
       "id": "MDU6SXNzdWU2MDI1NDQyMjY=",
       "title": "Replace Ignore Order with Packet Threshold",
       "url": "https://github.com/quicwg/ack-frequency/issues/35",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -948,8 +948,8 @@
       ],
       "body": "Issue #34 points out that if ignore_order is true, there's no way to get an immediate ACK(for PTO or otherwise).\r\n\r\nThis proposal is very similar to that discussed in #18, but I believe I can specify both how to implement it and how it could be used better than I was able to previously.\r\n\r\nI believe there's a straightforward use case every implementation can benefit from, which is communicating one's packet threshold for loss detection.\r\n\r\nI previously presented data at maprg which showed about half of reordering is twiddles(reorder of 1), so having some tolerance for it can reduce the number of unnecessary immediate acks substantially.  In order for this to not delay loss detection in some cases, the ack_delay field needs to be no larger than the time threshold for loss detection, which could be a limitation depending upon min_ack_delay, but I would typically expect to be fine.\r\n\r\nThe field could also be used for other use cases where packets aren't always sent in order, but that doesn't need to be explained in this draft.\r\n\r\nFor implementation, on every ack-eliciting packet:\r\n- If it's smaller than the largest acked in the last sent ack frame, send an immediate ACK because it fills a hole.\r\n- If it's larger than the last sent largest acked, only send an immediate ACK if there are missing packets greater than the last sent largest acked that are at least packet_threshold away from the current largest received packet.\r\n\r\nThis speeds up loss detection very slightly vs the core transport draft if the packet reordering threshold isn't an odd number, because the ACK is sent exactly when the sender will be able to use it to declare a loss.",
       "createdAt": "2020-04-18T20:24:57Z",
-      "updatedAt": "2021-07-23T20:26:44Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-10T16:26:52Z",
+      "closedAt": "2021-09-10T16:26:52Z",
       "comments": [
         {
           "author": "kazuho",
@@ -1048,6 +1048,13 @@
           "body": "Summarizing editors' discussion: We believe that there might be some non-zero performance benefits in doing packet_threshold, but there is clearly high cognitive complexity and therefore unknown issues. At this time, we believe that retaining ignore_order allows us to move forward, and if there is more information that shows the value of doing more, we will revisit this issue.\r\n\r\n(To be discussed at IETF.)",
           "createdAt": "2021-07-19T20:56:40Z",
           "updatedAt": "2021-07-19T20:56:40Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Until there's evidence this is valuable for performance, closing this.",
+          "createdAt": "2021-09-10T16:26:52Z",
+          "updatedAt": "2021-09-10T16:26:52Z"
         }
       ]
     },
@@ -1056,7 +1063,7 @@
       "id": "MDU6SXNzdWU2MTE0OTk3NzU=",
       "title": "Allow using kGranularity instead of max_ack_delay in PTO calculation",
       "url": "https://github.com/quicwg/ack-frequency/issues/37",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -1065,8 +1072,8 @@
       ],
       "body": "With this extension, an immediate ACK is expected if more than the \"Packet Tolerance\" ack-eliciting packets are outstanding.  Given that, it may be a worthwhile optimization to allow the max_ack_delay to not be included in the PTO computation in some cases.  If we're not going to allow that, I think we should explain why.\r\n\r\nhttps://github.com/janaiyengar/ack-frequency/blob/master/draft-iyengar-quic-delayed-ack.md#computation-of-probe-timeout-period\r\n\r\nThis split off #34, but I think the question of whether max_ack_delay always needs to be included in PTO should be separate from whether QUIC would benefit from an ACK-pull mechanism of some sort.  That being said, if a mechanism did exist, we add details about when ACK-pull allowed max_ack_delay to not be included.",
       "createdAt": "2020-05-03T20:26:32Z",
-      "updatedAt": "2021-07-23T17:51:09Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-10T07:15:35Z",
+      "closedAt": "2021-09-10T07:15:35Z",
       "comments": [
         {
           "author": "janaiyengar",
@@ -1082,17 +1089,17 @@
       "id": "MDU6SXNzdWU2NDEwMjc5OTc=",
       "title": "What about ack decimation?",
       "url": "https://github.com/quicwg/ack-frequency/issues/38",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "marten-seemann",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
         "design"
       ],
       "body": "Chrome has [some logic](https://source.chromium.org/chromium/chromium/src/+/master:net/third_party/quiche/src/quic/core/quic_received_packet_manager.cc;l=284-287) to delay sending of an immediate acknowledgement for reordered packets. This reduces the number of ACKs sent, since, if I remember @ianswett's presentation in mapgr correctly, most of the packet reorderings are just one packet number apart from each other.\r\n\r\nDo we need something like this?",
       "createdAt": "2020-06-18T08:49:07Z",
-      "updatedAt": "2021-07-19T21:07:18Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-10T16:25:52Z",
+      "closedAt": "2021-09-10T16:25:52Z",
       "comments": [
         {
           "author": "ianswett",
@@ -1115,7 +1122,7 @@
       "id": "MDU6SXNzdWU3MTUwOTAwMjk=",
       "title": "Specify whether storing min_ack_delay TP is mandatory",
       "url": "https://github.com/quicwg/ack-frequency/issues/40",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "dtikhonov",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -1124,8 +1131,8 @@
       ],
       "body": "The transport I-D 31 [states](https://tools.ietf.org/html/draft-ietf-quic-transport-31#section-7.4.1):\r\n\r\n```\r\n   The definition of a new transport parameter (Section 7.4.2) MUST\r\n   specify whether storing the transport parameter for 0-RTT is\r\n   mandatory, optional, or prohibited.  A client need not store a\r\n   transport parameter it cannot process.\r\n```\r\n\r\nThis information is missing from [draft-iyengar-quic-delayed-ack-01](https://tools.ietf.org/html/draft-iyengar-quic-delayed-ack-01).",
       "createdAt": "2020-10-05T19:08:26Z",
-      "updatedAt": "2021-07-31T01:14:48Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-10T16:24:45Z",
+      "closedAt": "2021-09-10T16:24:45Z",
       "comments": [
         {
           "author": "kazuho",
@@ -1133,6 +1140,13 @@
           "body": "FWIW, I tend to think that this issue is coupled with #22, and that endpoints do not need to, due to the reasons being explained on that issue.",
           "createdAt": "2020-11-03T02:16:17Z",
           "updatedAt": "2020-11-03T02:16:17Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixed by #63",
+          "createdAt": "2021-09-10T16:24:45Z",
+          "updatedAt": "2021-09-10T16:24:45Z"
         }
       ]
     },
@@ -1348,10 +1362,12 @@
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
-      "body": "From Mirja: \"For ECN, you don't need to send an immediate ACK for each CE. Immediate ACKs are most important when the codepoint switches to CE, but then, if multiple CEs in a row are received, you can bundle the ACK information. See also https://tools.ietf.org/html/draft-ietf-tcpm-accurate-ecn-14#section-3.2.2.5.1\r\n(Note that we are still working on that section for AccECN but I think any changes are only relevant for specifics of TCP)\"",
+      "labels": [
+        "design"
+      ],
+      "body": "From Mirja: \"For ECN, you don't need to send an immediate ACK for each CE. Immediate ACKs are most important when the codepoint switches to CE, but then, if multiple CEs in a row are received, you can bundle the ACK information. See also https://tools.ietf.org/html/draft-ietf-tcpm-accurate-ecn#section-3.2.2.5.1\r\n(Note that we are still working on that section for AccECN but I think any changes are only relevant for specifics of TCP)\"",
       "createdAt": "2021-04-07T14:09:29Z",
-      "updatedAt": "2021-07-22T20:54:00Z",
+      "updatedAt": "2021-09-11T20:17:19Z",
       "closedAt": null,
       "comments": [
         {
@@ -1360,6 +1376,20 @@
           "body": "From editors' discussion: This text is the same as that in RFC9000 (https://quicwg.org/base-drafts/rfc9000.html#name-sending-ack-frames), and we don't believe we need to depart from existing text for CE-marked packets, since those are true congestion events, and we don't need to optimize for collapsing acks during congestion.",
           "createdAt": "2021-07-22T20:53:59Z",
           "updatedAt": "2021-07-22T20:53:59Z"
+        },
+        {
+          "author": "bbriscoe",
+          "authorAssociation": "NONE",
+          "body": "Insisting on feeding back an ACK whenever there's a CE will come back to haunt you. \r\n1. After the hundredth CE in a row, you'll probably start to realize that each CE is not a 'congestion event'. \r\n2. You need to make sure that this doesn't force the receiver to ACK every CE-marked ACK, which could lead to interminable ACK ping-pong.\r\n\r\nAdmittedly, the sender should be slowing down, so perhaps it's not so bad to ram the reverse path full of ACKs under 100% congestion in the forward path. But it's not necessary - you could potentially squash other traffic sharing the reverse path. Particularly not nice in the first RTT before the sender starts responding. \r\n\r\nInstead, a requirement like under the [AccECN link](https://datatracker.ietf.org/doc/html/draft-ietf-tcpm-accurate-ecn#section-3.2.2.5.1) that Mirja pointed to, where you ACK every 'n' CE marks in a row will be sufficient. And if the peers support ACK frequency control, you might want to say 'n' is the greater of a) whatever 'standard' value is set by the IETF and b) the current ACK frequency requested by the sender.\r\n\r\nFinally, note that the AccECN section linked above was massively changed between -14 (when Mirja pointed to it) and -15 (now). Nearly all of the changes would be relevant to QUIC too (except the stuff about DupACKs, I think). So it's worth reading it all again carefully.",
+          "createdAt": "2021-09-11T11:56:08Z",
+          "updatedAt": "2021-09-11T11:56:08Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for the specific suggestion Bob, that's extremely helpful.\r\n\r\nI think there are three ways forward:\r\n1) Stick with the current text and deal with the performance hit when using non-classic ECN.\r\n2) Always do what Bob is suggesting when ACK_FREQUENCY is negotiated (Ack immediately when max(2, Ack-Eliciting Threshold) packets with CE marks are received.\r\n3) Change the ignore_order 'bool' to be an enum with 4 values that are a mix of Classic(RFC9000) and accurate ECN response to CE marks.\r\n\r\nI favor 2 and wrote #68 to document that.  My personal opinion is that classic ECN is not a good design and should be deprecated, so perpetuating it is actively harmful.",
+          "createdAt": "2021-09-11T20:17:19Z",
+          "updatedAt": "2021-09-11T20:17:19Z"
         }
       ]
     },
@@ -1368,7 +1398,7 @@
       "id": "MDU6SXNzdWU4NTI4ODI3OTU=",
       "title": "Off-by-one in packet tolerance",
       "url": "https://github.com/quicwg/ack-frequency/issues/49",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "martinthomson",
       "authorAssociation": "MEMBER",
       "assignees": [],
@@ -1377,8 +1407,8 @@
       ],
       "body": "The definition that I use internally is \"the number of packets you can receive without sending an immediate acknowledgment\".  This is different than saying \"please acknowledge every N packets\".\r\n\r\nThe main benefit of this definition is that there are no invalid values for the number.  I recommend making this adjustment in the frame definition: it will be more efficient (by a tiny amount), but it also removes the need to validate the value.",
       "createdAt": "2021-04-07T22:39:24Z",
-      "updatedAt": "2021-07-23T00:46:34Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-10T00:24:46Z",
+      "closedAt": "2021-09-10T00:24:46Z",
       "comments": [
         {
           "author": "ianswett",
@@ -1476,12 +1506,29 @@
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "design"
+      ],
       "body": "As a natural opposite to #34 adding an IMMEDIATE_ACK frame, I want to know if the WG thinks there's sufficient interest in this.  I know there are use cases like WebRTC where fine control over the ACKs is desirable.\r\n\r\n@nibanks may be interested in this, since a similar topic came up on https://github.com/quicwg/datagram/issues/42",
       "createdAt": "2021-09-08T12:32:51Z",
-      "updatedAt": "2021-09-08T12:34:06Z",
+      "updatedAt": "2021-09-10T17:13:14Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "nibanks",
+          "authorAssociation": "MEMBER",
+          "body": "I would be fine with using this mechanism to solve the issues described in quicwg/datagram#42.",
+          "createdAt": "2021-09-10T12:01:55Z",
+          "updatedAt": "2021-09-10T12:01:55Z"
+        },
+        {
+          "author": "mjoras",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think this would be very useful to have. Specifically we have seen interest similar to what @nibanks has mentioned -- existing applications that have their own \"application layer\" (partial) reliability and congestion control but want to leverage QUIC as a connection-oriented way to send encrypted datagrams. Having more explicit control over not-ACKing would certainly help some of these usecases.\r\n\r\nWhile I would rather people design protocols around QUIC application data semantics in full (streams and DATAGRAMs and some as-yet-undesigned partial reliability feature) rather than just plumbing an existing protocol over QUIC DATAGRAMs, I think that having a facility to get more applications running over QUIC is very useful.",
+          "createdAt": "2021-09-10T17:13:13Z",
+          "updatedAt": "2021-09-10T17:13:13Z"
+        }
+      ]
     },
     {
       "number": 66,
@@ -3124,24 +3171,26 @@
       "id": "MDExOlB1bGxSZXF1ZXN0Njk1NDU4Nzc5",
       "title": "Change Update Max Ack Delay to Request Max Ack Delay",
       "url": "https://github.com/quicwg/ack-frequency/pull/56",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fixes the remainder of #27 not fixed by #55",
       "createdAt": "2021-07-22T19:58:27Z",
-      "updatedAt": "2021-07-29T14:45:16Z",
+      "updatedAt": "2021-09-09T23:55:36Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
-      "baseRefOid": "a458009b1828cf719b2c5499e72b419956f65a0b",
+      "baseRefOid": "b8a834e72d9d14aa366e81fe5f9ddedd4bf73eb2",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-request-max-ack-delay",
-      "headRefOid": "92f13884102e15dc96bd3f9a41255c07fba3a75d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "5520d9fa7d2e35d7c83115097f52009447a1f9b7",
+      "closedAt": "2021-09-09T23:55:36Z",
+      "mergedAt": "2021-09-09T23:55:36Z",
+      "mergedBy": "ianswett",
+      "mergeCommit": {
+        "oid": "2d9681036b0c69cc08c050604e81863cc14d0df2"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3196,6 +3245,19 @@
               "updatedAt": "2021-07-24T12:07:25Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUwOTA0NTI5",
+          "commit": {
+            "abbreviatedOid": "92f1388"
+          },
+          "author": "janaiyengar",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "This is good enough. You have a conflict to resolve, but let's merge this.",
+          "createdAt": "2021-09-09T22:43:46Z",
+          "updatedAt": "2021-09-09T22:43:46Z",
+          "comments": []
         }
       ]
     },
@@ -3272,7 +3334,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0Njk1NTk3MzE2",
       "title": "Tweak ack-eliciting threshold.",
       "url": "https://github.com/quicwg/ack-frequency/pull/58",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -3281,17 +3343,19 @@
       ],
       "body": "Fixes #49\r\n\r\nAlso updates the transport parameter codepoint to 0xff03de1a from 0xff02de1a.",
       "createdAt": "2021-07-23T00:45:44Z",
-      "updatedAt": "2021-07-27T21:19:12Z",
+      "updatedAt": "2021-09-10T00:24:46Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
-      "baseRefOid": "89980ef76468ce41df2e11cbc6244eb0f7a78753",
+      "baseRefOid": "2d9681036b0c69cc08c050604e81863cc14d0df2",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-tweak-ack-threshold",
-      "headRefOid": "5673dc24650e4d11c9571090554e971620ed7224",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "4311a922f4c2d79e25bd37aaa27d80638fa56eec",
+      "closedAt": "2021-09-10T00:24:46Z",
+      "mergedAt": "2021-09-10T00:24:45Z",
+      "mergedBy": "ianswett",
+      "mergeCommit": {
+        "oid": "71ec632906f12388cf6623399d3deac3c2d59585"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3506,6 +3570,32 @@
               "updatedAt": "2021-07-27T21:19:12Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUwOTA2ODUz",
+          "commit": {
+            "abbreviatedOid": "5673dc2"
+          },
+          "author": "janaiyengar",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-09T22:48:33Z",
+          "updatedAt": "2021-09-09T22:55:55Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "```suggestion\r\n  packets the recipient of this frame can receive without sending an immediate\r\n```",
+              "createdAt": "2021-09-09T22:48:33Z",
+              "updatedAt": "2021-09-09T22:55:55Z"
+            },
+            {
+              "originalPosition": 19,
+              "body": "The text is slightly but enough different to the suggestion you made, @martinthomson. I think we should replace \"before\" with \"without\".",
+              "createdAt": "2021-09-09T22:48:38Z",
+              "updatedAt": "2021-09-09T22:55:55Z"
+            }
+          ]
         }
       ]
     },
@@ -3591,7 +3681,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0Njk2MTE2ODIy",
       "title": "MAY omit the max_ack_delay if enough packets are in flight",
       "url": "https://github.com/quicwg/ack-frequency/pull/60",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -3600,17 +3690,19 @@
       ],
       "body": "Fixes #37 by allowing implementations to not add max_ack_delay to the PTO calculation if enough ack-eliciting packets are in flight.",
       "createdAt": "2021-07-23T17:49:54Z",
-      "updatedAt": "2021-07-27T11:55:20Z",
+      "updatedAt": "2021-09-10T07:15:35Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "89980ef76468ce41df2e11cbc6244eb0f7a78753",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-omit-max-ack-delay",
-      "headRefOid": "e053319749eb8664a3ff654c0ee5432259c67c2c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "cda2f6719c14f81ad3ac09937435f8b2dc57648e",
+      "closedAt": "2021-09-10T07:15:35Z",
+      "mergedAt": "2021-09-10T07:15:35Z",
+      "mergedBy": "ianswett",
+      "mergeCommit": {
+        "oid": "5aeebefc3a0e33d69b5b830663f2fa7c78368299"
+      },
       "comments": [
         {
           "author": "ianswett",
@@ -3647,7 +3739,7 @@
             "abbreviatedOid": "694afdd"
           },
           "author": "marten-seemann",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "I'm not sure I understand the motivation for this (I'm also having trouble following the issue). Can we add some more explanation here?",
           "createdAt": "2021-07-24T11:43:01Z",
@@ -3666,6 +3758,26 @@
           "createdAt": "2021-07-27T11:55:20Z",
           "updatedAt": "2021-07-27T11:55:20Z",
           "comments": []
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUwOTgyNDU5",
+          "commit": {
+            "abbreviatedOid": "e053319"
+          },
+          "author": "janaiyengar",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "one suggestion, but lgtm otherwise.",
+          "createdAt": "2021-09-10T01:52:20Z",
+          "updatedAt": "2021-09-10T01:52:39Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "```suggestion\r\ncalculation. Note that this optimization requires some care in implementation, since\r\nit can cause premature PTOs under packet loss when `ignore_order` is enabled.\r\n```",
+              "createdAt": "2021-09-10T01:52:20Z",
+              "updatedAt": "2021-09-10T01:52:39Z"
+            }
+          ]
         }
       ]
     },
@@ -3674,24 +3786,26 @@
       "id": "MDExOlB1bGxSZXF1ZXN0Njk2MTk2NTU4",
       "title": "Don't change ack behavior until ACK_FREQUENCY is received",
       "url": "https://github.com/quicwg/ack-frequency/pull/61",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janaiyengar",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fixes #25.",
       "createdAt": "2021-07-23T20:34:18Z",
-      "updatedAt": "2021-07-24T18:17:31Z",
+      "updatedAt": "2021-09-10T16:23:50Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
-      "baseRefOid": "89980ef76468ce41df2e11cbc6244eb0f7a78753",
+      "baseRefOid": "fae9484977b8bb16ead9bcace6e81727d5051571",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "jri/tp-only",
-      "headRefOid": "51e9ed1bbb292f7d62d5718be5df6de93b8c22cc",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "810155d0d1be47d8abb0acc91daa237f56a444a1",
+      "closedAt": "2021-09-10T16:23:50Z",
+      "mergedAt": "2021-09-10T16:23:50Z",
+      "mergedBy": "ianswett",
+      "mergeCommit": {
+        "oid": "eccfdbe87babccd5294d3264c7627de0f5b08091"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3733,7 +3847,7 @@
             "abbreviatedOid": "51e9ed1"
           },
           "author": "marten-seemann",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2021-07-24T11:38:02Z",
@@ -3773,26 +3887,28 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NzAwNjMxNTUz",
       "title": "MUST NOT store min_ack_delay",
       "url": "https://github.com/quicwg/ack-frequency/pull/63",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
         "design"
       ],
-      "body": "Closes #22 and #40\r\n\r\nAnd by implication, MUST NOT send ACK_FREQUENCY in 0-RTT packets.",
+      "body": "Closes #22 and #40\r\n\r\nAnd by implication, cannot send ACK_FREQUENCY in 0-RTT packets.",
       "createdAt": "2021-07-31T01:10:21Z",
-      "updatedAt": "2021-08-04T00:06:11Z",
+      "updatedAt": "2021-09-10T16:15:48Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "a458009b1828cf719b2c5499e72b419956f65a0b",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-dont-store-min-ack-delay",
-      "headRefOid": "436b33ba946b20bcc7c2cb02cc69d86a3be0f480",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "c0084a4105c45d36a77f0eab46a8432e6eb0d35f",
+      "closedAt": "2021-09-10T16:15:48Z",
+      "mergedAt": "2021-09-10T16:15:48Z",
+      "mergedBy": "ianswett",
+      "mergeCommit": {
+        "oid": "fae9484977b8bb16ead9bcace6e81727d5051571"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3900,6 +4016,85 @@
           "createdAt": "2021-08-04T00:06:11Z",
           "updatedAt": "2021-08-04T00:06:11Z",
           "comments": []
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUwOTg0MTY2",
+          "commit": {
+            "abbreviatedOid": "436b33b"
+          },
+          "author": "janaiyengar",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "couple of suggestions, but lgtm",
+          "createdAt": "2021-09-10T01:56:51Z",
+          "updatedAt": "2021-09-10T01:59:38Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nthey received. Consequently, ACK_FREQUENCY frames MUST NOT be sent in 0-RTT\r\n```",
+              "createdAt": "2021-09-10T01:56:51Z",
+              "updatedAt": "2021-09-10T01:59:38Z"
+            },
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\npackets, as per Section 7.4.1 of {{QUIC-TRANSPORT}}.\r\n```",
+              "createdAt": "2021-09-10T01:59:18Z",
+              "updatedAt": "2021-09-10T01:59:38Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUwOTg3MTkw",
+          "commit": {
+            "abbreviatedOid": "436b33b"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-10T02:05:07Z",
+          "updatedAt": "2021-09-10T02:05:07Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "isn't it \"cannot\"?\r\n\r\n(You see, if we say \"MUST NOT\", we probably need to say what happens if you get a 0-RTT packet with ACK_FREQUENCY in it, but I know that some implementations can't really make that distinction.)",
+              "createdAt": "2021-09-10T02:05:07Z",
+              "updatedAt": "2021-09-10T02:05:07Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUxMTEwODIz",
+          "commit": {
+            "abbreviatedOid": "983de2c"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-10T07:13:05Z",
+          "updatedAt": "2021-09-10T07:13:05Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Good point, I think cannot is more correct, updated.",
+              "createdAt": "2021-09-10T07:13:05Z",
+              "updatedAt": "2021-09-10T07:13:05Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUxMzQ0Mjk4",
+          "commit": {
+            "abbreviatedOid": "c0084a4"
+          },
+          "author": "nibanks",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-09-10T12:13:42Z",
+          "updatedAt": "2021-09-10T12:13:42Z",
+          "comments": []
         }
       ]
     },
@@ -3917,13 +4112,13 @@
       ],
       "body": "Fixes #34 by adding a one byte IMMEDIATE_ACK frame.",
       "createdAt": "2021-09-08T12:30:33Z",
-      "updatedAt": "2021-09-08T15:50:21Z",
+      "updatedAt": "2021-09-11T08:55:30Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "b8a834e72d9d14aa366e81fe5f9ddedd4bf73eb2",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-immediate-ack",
-      "headRefOid": "2235bf41ec8f8c4fdc244454e06b6b468f599748",
+      "headRefOid": "5de63028efff6d30e523351429a536b1e15bdab8",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -3944,6 +4139,76 @@
           "updatedAt": "2021-09-08T15:50:21Z"
         }
       ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUxMzQ0OTc4",
+          "commit": {
+            "abbreviatedOid": "2235bf4"
+          },
+          "author": "nibanks",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-09-10T12:14:36Z",
+          "updatedAt": "2021-09-10T12:14:36Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 67,
+      "id": "MDExOlB1bGxSZXF1ZXN0NzMxODk5MjAy",
+      "title": "Add a NO_ACK frame",
+      "url": "https://github.com/quicwg/ack-frequency/pull/67",
+      "state": "OPEN",
+      "author": "ianswett",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "design"
+      ],
+      "body": "This frame overrides the behavior of IMMEDIATE_ACK, if the two were to be placed in the same packet.  This would of course be silly, but I don't think it's worth disallowing given the lack of harm.\r\n\r\nFixes #65",
+      "createdAt": "2021-09-11T08:51:21Z",
+      "updatedAt": "2021-09-11T09:07:09Z",
+      "baseRepository": "quicwg/ack-frequency",
+      "baseRefName": "main",
+      "baseRefOid": "eccfdbe87babccd5294d3264c7627de0f5b08091",
+      "headRepository": "quicwg/ack-frequency",
+      "headRefName": "ianswett-no-ack",
+      "headRefOid": "1a0106d9a3d09608e8757d458ac32724f05add4d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 68,
+      "id": "MDExOlB1bGxSZXF1ZXN0NzMxOTk2MjQ2",
+      "title": "ACK less frequently when CE marks are received",
+      "url": "https://github.com/quicwg/ack-frequency/pull/68",
+      "state": "OPEN",
+      "author": "ianswett",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "design"
+      ],
+      "body": "Per @bbriscoe's suggestion in #48, this PR changes the immediate ACK behavior to only send an immediate ACK when max(2, Ack-Eliciting Threshold) packets with CE marks have been received.\r\n\r\nFixes #48",
+      "createdAt": "2021-09-11T20:14:21Z",
+      "updatedAt": "2021-09-11T20:14:21Z",
+      "baseRepository": "quicwg/ack-frequency",
+      "baseRefName": "main",
+      "baseRefOid": "eccfdbe87babccd5294d3264c7627de0f5b08091",
+      "headRepository": "quicwg/ack-frequency",
+      "headRefName": "ianswett-ce-immediate-ack",
+      "headRefOid": "e781477a6374681defcbfdffc932e09311b29480",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
