@@ -1022,7 +1022,7 @@ address div.right {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Iyengar &amp; Swett</td>
-<td class="center">Expires 15 March 2022</td>
+<td class="center">Expires 18 March 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1035,12 +1035,12 @@ address div.right {
 <dd class="internet-draft">draft-ietf-quic-ack-frequency-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-09-11" class="published">11 September 2021</time>
+<time datetime="2021-09-14" class="published">14 September 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-03-15">15 March 2022</time></dd>
+<dd class="expires"><time datetime="2022-03-18">18 March 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1090,7 +1090,7 @@ code and issues list for this draft can be found at
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 March 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 March 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1121,8 +1121,8 @@ code and issues list for this draft can be found at
 <nav class="toc"><ul class="ulEmpty toc ulBare compact">
 <li class="ulEmpty toc ulBare compact" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a></p>
-<ul class="ulBare ulEmpty toc compact">
-<li class="ulBare ulEmpty toc compact" id="section-toc.1-1.1.2.1">
+<ul class="toc ulEmpty compact ulBare">
+<li class="toc ulEmpty compact ulBare" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-terms-and-definitions" class="xref">Terms and Definitions</a></p>
 </li>
             </ul>
@@ -1134,7 +1134,7 @@ code and issues list for this draft can be found at
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-negotiating-extension-use" class="xref">Negotiating Extension Use</a></p>
 </li>
           <li class="ulEmpty toc ulBare compact" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-no_ack-frame" class="xref">NO_ACK Frame</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-delay_ack-frame" class="xref">DELAY_ACK Frame</a></p>
 </li>
           <li class="ulEmpty toc ulBare compact" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-ack_frequency-frame" class="xref">ACK_FREQUENCY Frame</a></p>
@@ -1144,14 +1144,14 @@ code and issues list for this draft can be found at
 </li>
           <li class="ulEmpty toc ulBare compact" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-sending-acknowledgments" class="xref">Sending Acknowledgments</a></p>
-<ul class="ulBare ulEmpty toc compact">
-<li class="ulBare ulEmpty toc compact" id="section-toc.1-1.7.2.1">
+<ul class="toc ulEmpty compact ulBare">
+<li class="toc ulEmpty compact ulBare" id="section-toc.1-1.7.2.1">
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-response-to-reordering" class="xref">Response to Reordering</a></p>
 </li>
-              <li class="ulBare ulEmpty toc compact" id="section-toc.1-1.7.2.2">
+              <li class="toc ulEmpty compact ulBare" id="section-toc.1-1.7.2.2">
                 <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="xref">7.2</a>.  <a href="#name-expediting-congestion-signa" class="xref">Expediting Congestion Signals</a></p>
 </li>
-              <li class="ulBare ulEmpty toc compact" id="section-toc.1-1.7.2.3">
+              <li class="toc ulEmpty compact ulBare" id="section-toc.1-1.7.2.3">
                 <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="xref">7.3</a>.  <a href="#name-batch-processing-of-packets" class="xref">Batch Processing of Packets</a></p>
 </li>
             </ul>
@@ -1161,14 +1161,14 @@ code and issues list for this draft can be found at
 </li>
           <li class="ulEmpty toc ulBare compact" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-implementation-consideratio" class="xref">Implementation Considerations</a></p>
-<ul class="ulBare ulEmpty toc compact">
-<li class="ulBare ulEmpty toc compact" id="section-toc.1-1.9.2.1">
+<ul class="toc ulEmpty compact ulBare">
+<li class="toc ulEmpty compact ulBare" id="section-toc.1-1.9.2.1">
                 <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>.  <a href="#name-loss-detection" class="xref">Loss Detection</a></p>
 </li>
-              <li class="ulBare ulEmpty toc compact" id="section-toc.1-1.9.2.2">
+              <li class="toc ulEmpty compact ulBare" id="section-toc.1-1.9.2.2">
                 <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>.  <a href="#name-new-connections" class="xref">New Connections</a></p>
 </li>
-              <li class="ulBare ulEmpty toc compact" id="section-toc.1-1.9.2.3">
+              <li class="toc ulEmpty compact ulBare" id="section-toc.1-1.9.2.3">
                 <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="xref">9.3</a>.  <a href="#name-window-based-congestion-con" class="xref">Window-based Congestion Controllers</a></p>
 </li>
             </ul>
@@ -1298,23 +1298,22 @@ packets, as per Section 7.4.1 of <span>[<a href="#QUIC-TRANSPORT" class="xref">Q
 <p id="section-3-7">This Transport Parameter is encoded as per Section 18 of <span>[<a href="#QUIC-TRANSPORT" class="xref">QUIC-TRANSPORT</a>]</span>.<a href="#section-3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="noack-frame">
+<div id="delayack-frame">
 <section id="section-4">
-      <h2 id="name-no_ack-frame">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-no_ack-frame" class="section-name selfRef">NO_ACK Frame</a>
+      <h2 id="name-delay_ack-frame">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-delay_ack-frame" class="section-name selfRef">DELAY_ACK Frame</a>
       </h2>
-<p id="section-4-1">The NO_ACK Frame causes the receiver to treat a packet as not ack-eliciting.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Receivers SHOULD treat the receipt of a QUIC packet containing one or more
-NO_ACK frames as not ack-eliciting, even if there is an IMMEDIATE_ACK frame
-in the packet. The addition of the NO_ACK frame creates a packet similar to
-a packet that only contains PADDING frames in that the packet counts towards
-the sender's bytes in flight, but does not elicit an acknowledgement.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-1">The DELAY_ACK Frame causes the receiver to send an immediate acknowledgement,
+for example due to exceeding the 'Ack-Eliciting Threshold' or due to the packet
+arriving out of order.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">Senders MUST NOT send a packet containing both DELAY_ACK and IMMEDIATE_ACK,
+given their response directly conflicts with each other.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <div class="artwork art-text alignLeft" id="section-4-3">
 <pre>
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                            0xad (i)                         ...
+|                            0xda (i)                         ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre><a href="#section-4-3" class="pilcrow">¶</a>
 </div>
@@ -1632,8 +1631,8 @@ delaying acknowledgments will cause undesirable bursts of data into the network.
       <h2 id="name-change-log">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-change-log" class="section-name selfRef">Change Log</a>
       </h2>
-<ul class="ulEmpty normal">
-<li class="ulEmpty normal" id="appendix-A-1.1">
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="appendix-A-1.1">
           <p id="appendix-A-1.1.1"><strong>RFC Editor's Note:</strong> Please remove this section prior to publication of a
 final version of this document.<a href="#appendix-A-1.1.1" class="pilcrow">¶</a></p>
 </li>

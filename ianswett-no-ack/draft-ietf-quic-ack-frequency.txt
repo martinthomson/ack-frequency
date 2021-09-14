@@ -5,8 +5,8 @@
 QUIC                                                          J. Iyengar
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                I. Swett
-Expires: 15 March 2022                                            Google
-                                                       11 September 2021
+Expires: 18 March 2022                                            Google
+                                                       14 September 2021
 
 
                      QUIC Acknowledgement Frequency
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 March 2022.
+   This Internet-Draft will expire on 18 March 2022.
 
 Copyright Notice
 
@@ -67,7 +67,7 @@ Table of Contents
      1.1.  Terms and Definitions
    2.  Motivation
    3.  Negotiating Extension Use
-   4.  NO_ACK Frame
+   4.  DELAY_ACK Frame
    5.  ACK_FREQUENCY Frame
    6.  Multiple ACK_FREQUENCY Frames
    7.  Sending Acknowledgments
@@ -185,22 +185,20 @@ Table of Contents
    This Transport Parameter is encoded as per Section 18 of
    [QUIC-TRANSPORT].
 
-4.  NO_ACK Frame
+4.  DELAY_ACK Frame
 
-   The NO_ACK Frame causes the receiver to treat a packet as not ack-
-   eliciting.
+   The DELAY_ACK Frame causes the receiver to send an immediate
+   acknowledgement, for example due to exceeding the 'Ack-Eliciting
+   Threshold' or due to the packet arriving out of order.
 
-   Receivers SHOULD treat the receipt of a QUIC packet containing one or
-   more NO_ACK frames as not ack-eliciting, even if there is an
-   IMMEDIATE_ACK frame in the packet.  The addition of the NO_ACK frame
-   creates a packet similar to a packet that only contains PADDING
-   frames in that the packet counts towards the sender's bytes in
-   flight, but does not elicit an acknowledgement.
+   Senders MUST NOT send a packet containing both DELAY_ACK and
+   IMMEDIATE_ACK, given their response directly conflicts with each
+   other.
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                            0xad (i)                         ...
+   |                            0xda (i)                         ...
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 5.  ACK_FREQUENCY Frame
