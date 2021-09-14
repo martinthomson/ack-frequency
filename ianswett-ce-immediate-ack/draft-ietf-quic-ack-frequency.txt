@@ -5,8 +5,8 @@
 QUIC                                                          J. Iyengar
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                I. Swett
-Expires: 16 March 2022                                            Google
-                                                       12 September 2021
+Expires: 18 March 2022                                            Google
+                                                       14 September 2021
 
 
                      QUIC Acknowledgement Frequency
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 March 2022.
+   This Internet-Draft will expire on 18 March 2022.
 
 Copyright Notice
 
@@ -336,9 +336,9 @@ Table of Contents
 
 6.2.  Expediting Congestion Signals
 
-   And endpoing SHOULD send an immediate acknowledgement when a packet
+   An endpoint SHOULD send an immediate acknowledgement when a packet
    marked with the ECN Congestion Experienced (CE) codepoint in the IP
-   header is received after the previous packet was not marked CE.
+   header is received and the previous packet was not marked CE.
 
    An endpoint SHOULD also send an immediate acknowledgement when at
    least max(2, Ack-Eliciting Threshold) packets marked with the ECN
