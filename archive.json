@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-09-12T00:53:37.410550+00:00",
+  "timestamp": "2021-09-14T00:55:51.144469+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -1367,7 +1367,7 @@
       ],
       "body": "From Mirja: \"For ECN, you don't need to send an immediate ACK for each CE. Immediate ACKs are most important when the codepoint switches to CE, but then, if multiple CEs in a row are received, you can bundle the ACK information. See also https://tools.ietf.org/html/draft-ietf-tcpm-accurate-ecn#section-3.2.2.5.1\r\n(Note that we are still working on that section for AccECN but I think any changes are only relevant for specifics of TCP)\"",
       "createdAt": "2021-04-07T14:09:29Z",
-      "updatedAt": "2021-09-11T20:17:19Z",
+      "updatedAt": "2021-09-14T00:29:33Z",
       "closedAt": null,
       "comments": [
         {
@@ -1387,9 +1387,30 @@
         {
           "author": "ianswett",
           "authorAssociation": "COLLABORATOR",
-          "body": "Thanks for the specific suggestion Bob, that's extremely helpful.\r\n\r\nI think there are three ways forward:\r\n1) Stick with the current text and deal with the performance hit when using non-classic ECN.\r\n2) Always do what Bob is suggesting when ACK_FREQUENCY is negotiated (Ack immediately when max(2, Ack-Eliciting Threshold) packets with CE marks are received.\r\n3) Change the ignore_order 'bool' to be an enum with 4 values that are a mix of Classic(RFC9000) and accurate ECN response to CE marks.\r\n\r\nI favor 2 and wrote #68 to document that.  My personal opinion is that classic ECN is not a good design and should be deprecated, so perpetuating it is actively harmful.",
+          "body": "Thanks for the specific suggestion Bob, that's extremely helpful.\r\n\r\nI think there are four ways forward:\r\n1) Stick with the current text and deal with the performance hit when using non-classic ECN.\r\n2) Always do something along the lines AccECN is suggesting when ACK_FREQUENCY is negotiated, ie: Ack immediately when max(2, Ack-Eliciting Threshold) packets with CE marks are received.\r\n3) Change the ignore_order 'bool' to be an enum with 4 values that are a mix of Classic(RFC9000) and accurate ECN response to CE marks.\r\n4) Do something completely from RFC9000 or AccECN.  I'm not sure what would inform this, but maybe there are aspects of QUIC which means the ACK response should be different from TCP Accurate ECN.\r\n\r\nI favor 2 and wrote #68 to document that.  My personal opinion is that classic ECN is not able to perform as well as newer marking schemes and should be deprecated, so perpetuating it is actively harmful.",
           "createdAt": "2021-09-11T20:17:19Z",
-          "updatedAt": "2021-09-11T20:17:19Z"
+          "updatedAt": "2021-09-12T13:17:32Z"
+        },
+        {
+          "author": "bbriscoe",
+          "authorAssociation": "NONE",
+          "body": "The design is not (only) for 'non-classic ECN', it's for handling any severe reverse channel congestion.\r\n\r\nFor the avoidance of doubt, if @ianswett's #2 alternative is meant to be \"as Bob (AccECN) suggested\", a number of possibly important details are missing:\r\n\r\n- a) Immediately ACK the first transition from a non-CE packet to a CE data packet; and b) ACK every max(2, Ack-Eliciting Threshold) contiguous CE marked packets after that.\r\n- The choice of 'packet' (twice) or 'data packet' (once) in the above is deliberate\r\n\r\nI agree that ECN feedback in RFC3168 should be deprecated (which is why I didn't object when it was proposed that AccECN should move from experimental to stds track update to 3168).\r\n\r\n\r\n",
+          "createdAt": "2021-09-12T15:46:24Z",
+          "updatedAt": "2021-09-12T15:46:24Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The PR includes the 'Immediately ACK the first transition from non-CE to CE.  PTAL and see if the text looks correct.",
+          "createdAt": "2021-09-12T20:55:48Z",
+          "updatedAt": "2021-09-12T20:55:48Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "After further thinking, I'm wondering if we should have multiple modes that are indicated by bits in the 'Ignore Order' bytes.\r\n\r\nSpecifically:\r\n- 0 is rfc9000 behavior.\r\n   -  Conveniently, this means clients sending Ignore Order values of 0 or 1 will see no change in behavior.\r\n- 1 is Ignore CE when choosing how frequently to acknowledge packets.\r\n  - This would likely be the best option for ECN algorithms where close to 50% of packets are marked.\r\n- 2 is accurate ECN, which is the current PR.",
+          "createdAt": "2021-09-14T00:29:33Z",
+          "updatedAt": "2021-09-14T00:29:33Z"
         }
       ]
     },
@@ -1500,7 +1521,7 @@
     {
       "number": 65,
       "id": "MDU6SXNzdWU5OTEwODc4NTc=",
-      "title": "Should we add a NO_ACK frame?",
+      "title": "Should we add a DELAY_ACK frame?",
       "url": "https://github.com/quicwg/ack-frequency/issues/65",
       "state": "OPEN",
       "author": "ianswett",
@@ -1511,7 +1532,7 @@
       ],
       "body": "As a natural opposite to #34 adding an IMMEDIATE_ACK frame, I want to know if the WG thinks there's sufficient interest in this.  I know there are use cases like WebRTC where fine control over the ACKs is desirable.\r\n\r\n@nibanks may be interested in this, since a similar topic came up on https://github.com/quicwg/datagram/issues/42",
       "createdAt": "2021-09-08T12:32:51Z",
-      "updatedAt": "2021-09-10T17:13:14Z",
+      "updatedAt": "2021-09-14T00:39:06Z",
       "closedAt": null,
       "comments": [
         {
@@ -1527,6 +1548,62 @@
           "body": "I think this would be very useful to have. Specifically we have seen interest similar to what @nibanks has mentioned -- existing applications that have their own \"application layer\" (partial) reliability and congestion control but want to leverage QUIC as a connection-oriented way to send encrypted datagrams. Having more explicit control over not-ACKing would certainly help some of these usecases.\r\n\r\nWhile I would rather people design protocols around QUIC application data semantics in full (streams and DATAGRAMs and some as-yet-undesigned partial reliability feature) rather than just plumbing an existing protocol over QUIC DATAGRAMs, I think that having a facility to get more applications running over QUIC is very useful.",
           "createdAt": "2021-09-10T17:13:13Z",
           "updatedAt": "2021-09-10T17:13:13Z"
+        },
+        {
+          "author": "huitema",
+          "authorAssociation": "NONE",
+          "body": "Just say NO! Really, this kind of experiment goes in the way of progressing the delayed ACK proper. We have tons of experience with delayed acks, and we understand exactly what it does. Why would we create this additional mechanism, with unproven effects?",
+          "createdAt": "2021-09-13T00:20:40Z",
+          "updatedAt": "2021-09-13T00:20:40Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "NONE",
+          "body": "So, I think this naturally leads to the question of how long an ACK delay is actually acceptable for coexistence with other Internet use. Delayed ACKs our tens of packets are likely OK.  I'll argue that \"infinite\" delay (No ACK) it is not a great place to dig into. I suggest we should instead be restricting this to a few RTTs... (10's? 100s of packets).   I'd argue that for some form of reactive congestion control, feedback at least every few RTTs is necessary - this could even be a form of slower-reacting circuit-breaker, with the upper layers formally providing the responsive control to incipient ingestion.\r\n",
+          "createdAt": "2021-09-13T11:22:55Z",
+          "updatedAt": "2021-09-13T11:22:55Z"
+        },
+        {
+          "author": "nibanks",
+          "authorAssociation": "MEMBER",
+          "body": "I'm in agreement with @mjoras that a change like this would better be aligned with the application data semantics, unreliable datagrams in this case. As I indicated in https://github.com/quicwg/datagram/issues/42#issuecomment-912513452, there are several reasons an application protocol would want a reduction in (not complete elimination of) generated ACKs when using unreliable datagrams. There might be additional uses, generally, for delaying ACKs, but the reasoning around it is more complicated for reliable data. For the unreliable support, I can write that up in a new extension draft (if that is the general WG consensus).",
+          "createdAt": "2021-09-13T12:16:00Z",
+          "updatedAt": "2021-09-13T12:16:00Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The idea of this extending the ACK timeout, but not removing it completely is interesting.\r\n\r\nAn alternative design would be a DELAY_ACK frame which ensured a packet doesn't elicit an immediate ACK, but would still arm the timer for the delayed ACK alarm.",
+          "createdAt": "2021-09-13T13:31:24Z",
+          "updatedAt": "2021-09-13T13:31:24Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "MEMBER",
+          "body": "Given the swathe of needs and possible options, I currently think there's going to need to be some more exploration of this space with some more substantial write ups.",
+          "createdAt": "2021-09-13T13:47:17Z",
+          "updatedAt": "2021-09-13T13:47:17Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Just say NO! Really, this kind of experiment goes in the way of progressing the delayed ACK proper. We have tons of experience with delayed acks, and we understand exactly what it does. Why would we create this additional mechanism, with unproven effects?\r\n\r\nWe already have this ACK issue with PADDING only packets, which count towards bytes in flight, but are not ack-eliciting.  That design choice always terrified me.  I would have been much more comfortable with something like the DELAY_ACK design I proposed just above, which would ensure you eventually get an ACK for in-flight packets.",
+          "createdAt": "2021-09-13T13:52:40Z",
+          "updatedAt": "2021-09-13T13:52:58Z"
+        },
+        {
+          "author": "janaiyengar",
+          "authorAssociation": "COLLABORATOR",
+          "body": "As a mechanism, we should not use a frame to signal how a different frame should be interpreted. QUIC's design generally assumes that a sender does not control how frames are packetized, and this runs afoul of that unstated assumption.\r\n\r\nSpecifying the mechanism is easy, but I don't think this is quite as straightforward to reason about, at least in the context of the ack frequency draft. Broadly, this is not about controlling ack frequency, it's about disabling acks, or partially disabling acks, which makes it harder to reason about.\r\n\r\nLet's not do this here; as @LPardue notes, this has to become a larger conversation.",
+          "createdAt": "2021-09-13T18:55:55Z",
+          "updatedAt": "2021-09-13T18:55:55Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Given the pushback against my initial attempt, I'm pivoting to the DELAY_ACK frame.\r\n\r\nI'd actually like the negotiation of this extension to indicate the delayed ack behavior applies to PADDING only and PADDING+ACK packets as well, since I think those can be a bit of a footgun, but I'd like to see what people think of the DELAY_ACK frame before writing that text.",
+          "createdAt": "2021-09-14T00:39:06Z",
+          "updatedAt": "2021-09-14T00:39:06Z"
         }
       ]
     },
@@ -4158,7 +4235,7 @@
     {
       "number": 67,
       "id": "MDExOlB1bGxSZXF1ZXN0NzMxODk5MjAy",
-      "title": "Add a NO_ACK frame",
+      "title": "Add a DELAY_ACK frame",
       "url": "https://github.com/quicwg/ack-frequency/pull/67",
       "state": "OPEN",
       "author": "ianswett",
@@ -4169,18 +4246,26 @@
       ],
       "body": "This frame overrides the behavior of IMMEDIATE_ACK, if the two were to be placed in the same packet.  This would of course be silly, but I don't think it's worth disallowing given the lack of harm.\r\n\r\nFixes #65",
       "createdAt": "2021-09-11T08:51:21Z",
-      "updatedAt": "2021-09-11T09:07:09Z",
+      "updatedAt": "2021-09-14T00:37:13Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "eccfdbe87babccd5294d3264c7627de0f5b08091",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-no-ack",
-      "headRefOid": "1a0106d9a3d09608e8757d458ac32724f05add4d",
+      "headRefOid": "e25e0d9a8ce01e74404628da8229162e1507aa5d",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "huitema",
+          "authorAssociation": "NONE",
+          "body": "1) Do we really need this?\r\n2) What happens if the receiver ignores the frame and just acks the packet?\r\n3) If a packet contains both immediate_ack and no_ack, the reaction should be \"protocol error\", not \"ignore one and pick the other\".",
+          "createdAt": "2021-09-13T00:18:30Z",
+          "updatedAt": "2021-09-13T00:18:30Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -4197,19 +4282,106 @@
       ],
       "body": "Per @bbriscoe's suggestion in #48, this PR changes the immediate ACK behavior to only send an immediate ACK when max(2, Ack-Eliciting Threshold) packets with CE marks have been received.\r\n\r\nFixes #48",
       "createdAt": "2021-09-11T20:14:21Z",
-      "updatedAt": "2021-09-11T20:14:21Z",
+      "updatedAt": "2021-09-14T00:43:04Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "eccfdbe87babccd5294d3264c7627de0f5b08091",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-ce-immediate-ack",
-      "headRefOid": "e781477a6374681defcbfdffc932e09311b29480",
+      "headRefOid": "4b138838039d5694b52b52287d37487d41f97ce5",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'm wondering if this should be max(2, Ack-Eliciting Threshold)/2 instead?\r\n\r\nAs it is, except for the immediate ack on unmarked to CE marked, this algorithm basically doesn't change acknowledgement behavior at all.",
+          "createdAt": "2021-09-12T13:19:24Z",
+          "updatedAt": "2021-09-12T13:19:24Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUyMjI4ODU3",
+          "commit": {
+            "abbreviatedOid": "b44b55d"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-12T23:47:57Z",
+          "updatedAt": "2021-09-12T23:50:48Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "```suggestion\r\nAn endpoint SHOULD send an immediate acknowledgement when a packet marked\r\n```",
+              "createdAt": "2021-09-12T23:47:57Z",
+              "updatedAt": "2021-09-12T23:50:48Z"
+            },
+            {
+              "originalPosition": 10,
+              "body": "```suggestion\r\nreceived and the previous packet was not marked CE.\r\n```",
+              "createdAt": "2021-09-12T23:48:34Z",
+              "updatedAt": "2021-09-12T23:50:48Z"
+            },
+            {
+              "originalPosition": 16,
+              "body": "```suggestion\r\ncompared to {{Section 13.2.1 of QUIC-TRANSPORT}} when peers are using\r\n```",
+              "createdAt": "2021-09-12T23:49:14Z",
+              "updatedAt": "2021-09-12T23:50:48Z"
+            },
+            {
+              "originalPosition": 14,
+              "body": "How about\r\n> An endpoint SHOULD reduce its Ack-Eliciting Threshold to at most 2 when acknowledging a contiguous series of CE marked packets.",
+              "createdAt": "2021-09-12T23:50:42Z",
+              "updatedAt": "2021-09-12T23:50:48Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NzUyMjMyNDA2",
+          "commit": {
+            "abbreviatedOid": "b44b55d"
+          },
+          "author": "goelvidhi",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-13T00:13:10Z",
+          "updatedAt": "2021-09-13T00:13:10Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "This line is a bit confusing. I think we can separate out `reduces the peer's response time to congestion events` and `while also reducing the ACK rate as compared to`. Another clarification is needed about the fact that congestion controllers don't mark but respond to marks.\r\nSuggestion:\r\n```\r\nDoing so reduces the peer's response time to congestion events especially when peers are using DCTCP {{?RFC8257}} or other congestion controllers that respond to immediate CE markings which are much more\r\n frequent than classic ECN {{?RFC3168}}.\r\n ```\r\n And then talk about\r\n ```\r\n This will also help in reducing the ACK rate on the reverse path as compared to Section 13.2.1 of {{QUIC-TRANSPORT}}\r\n ```\r\n \r\n",
+              "createdAt": "2021-09-13T00:13:10Z",
+              "updatedAt": "2021-09-13T00:13:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4s54JG",
+          "commit": {
+            "abbreviatedOid": "4b13883"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-14T00:43:04Z",
+          "updatedAt": "2021-09-14T00:43:04Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "It doesn't actually reduce the response time compared to RFC9000, so I think the current text is more accurate?",
+              "createdAt": "2021-09-14T00:43:04Z",
+              "updatedAt": "2021-09-14T00:43:04Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
