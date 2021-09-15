@@ -5,8 +5,8 @@
 QUIC                                                          J. Iyengar
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                I. Swett
-Expires: 14 March 2022                                            Google
-                                                       10 September 2021
+Expires: 19 March 2022                                            Google
+                                                       15 September 2021
 
 
                      QUIC Acknowledgement Frequency
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 March 2022.
+   This Internet-Draft will expire on 19 March 2022.
 
 Copyright Notice
 
@@ -69,18 +69,19 @@ Table of Contents
    3.  Negotiating Extension Use
    4.  ACK_FREQUENCY Frame
    5.  Multiple ACK_FREQUENCY Frames
-   6.  Sending Acknowledgments
-     6.1.  Response to Reordering
-     6.2.  Expediting Congestion Signals
-     6.3.  Batch Processing of Packets
-   7.  Computation of Probe Timeout Period
-   8.  Implementation Considerations
-     8.1.  Loss Detection
-     8.2.  New Connections
-     8.3.  Window-based Congestion Controllers
-   9.  Security Considerations
-   10. IANA Considerations
-   11. Normative References
+   6.  IMMEDIATE_ACK Frame
+   7.  Sending Acknowledgments
+     7.1.  Response to Reordering
+     7.2.  Expediting Congestion Signals
+     7.3.  Batch Processing of Packets
+   8.  Computation of Probe Timeout Period
+   9.  Implementation Considerations
+     9.1.  Loss Detection
+     9.2.  New Connections
+     9.3.  Window-based Congestion Controllers
+   10. Security Considerations
+   11. IANA Considerations
+   12. Normative References
    Appendix A.  Change Log
    Acknowledgments
    Authors' Addresses
@@ -136,7 +137,7 @@ Table of Contents
       number of acknowledgments allows connection throughput to scale
       much further.
 
-   As discussed in Section 8 however, there are undesirable consequences
+   As discussed in Section 9 however, there are undesirable consequences
    to congestion control and loss recovery if a receiver uniltaerally
    reduces the acknowledgment frequency.  A sender's constraints on the
    acknowledgement frequency need to be taken into account to maximize
@@ -237,7 +238,7 @@ Table of Contents
       This field MUST have the value 0x00 (representing "false") or 0x01
       (representing "true").  This field can be set to "true" by an
       endpoint that does not wish to receive an immediate
-      acknowledgement when the peer observes reordering (Section 6.1).
+      acknowledgement when the peer observes reordering (Section 7.1).
       Receipt of any other value MUST be treated as a connection error
       of type FRAME_ENCODING_ERROR.
 
@@ -269,7 +270,7 @@ Table of Contents
    sequence number of the frame is recorded as the largest seen sequence
    number.  The new Ack-Eliciting Threshold and Request Max Ack Delay
    values MUST be immediately used for delaying acknowledgements; see
-   Section 6.
+   Section 7.
 
    On a subsequently received ACK_FREQUENCY frame, the endpoint MUST
    check if this frame is more recent than any previous ones, as
@@ -282,10 +283,28 @@ Table of Contents
       seen so far, the endpoint MUST immediately replace old recorded
       state with values received in this frame.  The endpoint MUST start
       using the new values immediately for delaying acknowledgements;
-      see Section 6.  The endpoint MUST also replace the recorded
+      see Section 7.  The endpoint MUST also replace the recorded
       sequence number.
 
-6.  Sending Acknowledgments
+6.  IMMEDIATE_ACK Frame
+
+   The IMMEDIATE_ACK Frame is a frame which causes the peer to send a
+   packet containing an ACK frame immediately, similar to the receipt of
+   Initial and Handshake packets during the QUIC handshake.
+
+   Receivers of the IMMEDIATE_ACK frame MAY choose to delay sending the
+   ACK if the vast majority of received packets contain an IMMEDIATE_ACK
+   or the receiver is under heavy load.  Senders MAY include multiple
+   IMMEDIATE_ACK frames in a single QUIC packet, but the behavior is
+   identical to a single IMMEDIATE_ACK frame.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            0xac (i)                         ...
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+7.  Sending Acknowledgments
 
    Prior to receiving an ACK_FREQUENCY frame, endpoints send
    acknowledgements as specified in Section 13.2.1 of [QUIC-TRANSPORT].
@@ -302,7 +321,7 @@ Table of Contents
    *  Since the last acknowledgement was sent, "max_ack_delay" amount of
       time has passed.
 
-   Section 6.1, Section 6.2, and Section 6.3 describe exceptions to this
+   Section 7.1, Section 7.2, and Section 7.3 describe exceptions to this
    strategy.
 
    An endpoint is expected to bundle acknowledgements when possible.
@@ -313,7 +332,7 @@ Table of Contents
    multiple available packets before determining whether to send an ACK
    frame in response, as stated in Section 13.2.2 of [QUIC-TRANSPORT].
 
-6.1.  Response to Reordering
+7.1.  Response to Reordering
 
    As specified in Section 13.2.1 of [QUIC-TRANSPORT], endpoints are
    expected to send an acknowledgement immediately on receiving a
@@ -332,14 +351,14 @@ Table of Contents
    instead continues to use the peer's "Ack-Eliciting Threshold" and
    "max_ack_delay" thresholds for sending acknowledgements.
 
-6.2.  Expediting Congestion Signals
+7.2.  Expediting Congestion Signals
 
    As specified in Section 13.2.1 of [QUIC-TRANSPORT], an endpoint
    SHOULD immediately acknowledge packets marked with the ECN Congestion
    Experienced (CE) codepoint in the IP header.  Doing so reduces the
    peer's response time to congestion events.
 
-6.3.  Batch Processing of Packets
+7.3.  Batch Processing of Packets
 
    For performance reasons, an endpoint can receive incoming packets
    from the underlying platform in a batch of multiple packets.  This
@@ -351,7 +370,7 @@ Table of Contents
    whether a threshold has been met and an acknowledgement is to be sent
    in response.
 
-7.  Computation of Probe Timeout Period
+8.  Computation of Probe Timeout Period
 
    On sending an update to the peer's "max_ack_delay", an endpoint can
    use this new value in later computations of its Probe Timeout (PTO)
@@ -378,7 +397,7 @@ Table of Contents
    optimization requires some care in implementation, since it can cause
    premature PTOs under packet loss when "ignore_order" is enabled.
 
-8.  Implementation Considerations
+9.  Implementation Considerations
 
    There are tradeoffs inherent in a sender sending an ACK_FREQUENCY
    frame to the receiver.  As such it is recommended that implementers
@@ -387,7 +406,7 @@ Table of Contents
    noteworthy considerations when devising strategies for sending
    ACK_FREQUENCY frames.
 
-8.1.  Loss Detection
+9.1.  Loss Detection
 
    A sender relies on receipt of acknowledgements to determine the
    amount of data in flight and to detect losses, e.g. when packets
@@ -395,7 +414,7 @@ Table of Contents
    a receiver sends acknowledgments determines how long it takes for
    losses to be detected at the sender.
 
-8.2.  New Connections
+9.2.  New Connections
 
    Many congestion control algorithms have a startup mechanism during
    the beginning phases of a connection.  It is typical that in this
@@ -408,7 +427,7 @@ Table of Contents
    that the receiver will send acknowledgments at a rate which is
    optimal for the the sender's congestion controller.
 
-8.3.  Window-based Congestion Controllers
+9.3.  Window-based Congestion Controllers
 
    Congestion controllers that are purely window-based and strictly
    adherent to packet conservation, such as the one defined in
@@ -420,15 +439,15 @@ Table of Contents
    acknowledgments will cause undesirable bursts of data into the
    network.
 
-9.  Security Considerations
+10.  Security Considerations
 
    TBD.
 
-10.  IANA Considerations
+11.  IANA Considerations
 
    TBD.
 
-11.  Normative References
+12.  Normative References
 
    [QUIC-RECOVERY]
               Iyengar, J., Ed. and I. Swett, Ed., "QUIC Loss Detection
