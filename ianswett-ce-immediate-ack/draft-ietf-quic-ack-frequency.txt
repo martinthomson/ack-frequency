@@ -5,8 +5,8 @@
 QUIC                                                          J. Iyengar
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                I. Swett
-Expires: 18 March 2022                                            Google
-                                                       14 September 2021
+Expires: 19 March 2022                                            Google
+                                                       15 September 2021
 
 
                      QUIC Acknowledgement Frequency
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 March 2022.
+   This Internet-Draft will expire on 19 March 2022.
 
 Copyright Notice
 
@@ -345,9 +345,9 @@ Table of Contents
    Congestion Experienced (CE) codepoint in the IP header are received.
    Doing so reduces the peer's response time to congestion events, while
    also reducing the ACK rate compared to Section 13.2.1 of
-   [QUIC-TRANSPORT] when peers are using DCTCP [RFC8257] or other
-   congestion controllers that mark much more frequently than classic
-   ECN [RFC3168].
+   [QUIC-TRANSPORT] during extreme congestion or when peers are using
+   DCTCP [RFC8257] or other congestion controllers that mark much more
+   frequently than classic ECN [RFC3168].
 
 6.3.  Batch Processing of Packets
 
