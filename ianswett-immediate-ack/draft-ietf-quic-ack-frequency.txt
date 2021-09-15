@@ -5,8 +5,8 @@
 QUIC                                                          J. Iyengar
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                I. Swett
-Expires: 15 March 2022                                            Google
-                                                       11 September 2021
+Expires: 19 March 2022                                            Google
+                                                       15 September 2021
 
 
                      QUIC Acknowledgement Frequency
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 March 2022.
+   This Internet-Draft will expire on 19 March 2022.
 
 Copyright Notice
 
@@ -67,9 +67,9 @@ Table of Contents
      1.1.  Terms and Definitions
    2.  Motivation
    3.  Negotiating Extension Use
-   4.  IMMEDIATE_ACK Frame
-   5.  ACK_FREQUENCY Frame
-   6.  Multiple ACK_FREQUENCY Frames
+   4.  ACK_FREQUENCY Frame
+   5.  Multiple ACK_FREQUENCY Frames
+   6.  IMMEDIATE_ACK Frame
    7.  Sending Acknowledgments
      7.1.  Response to Reordering
      7.2.  Expediting Congestion Signals
@@ -176,25 +176,7 @@ Table of Contents
    This Transport Parameter is encoded as per Section 18 of
    [QUIC-TRANSPORT].
 
-4.  IMMEDIATE_ACK Frame
-
-   The IMMEDIATE_ACK Frame is a frame which causes the peer to send a
-   packet containing an ACK frame immediately, similar to the receipt of
-   Initial and Handshake packets during the QUIC handshake.
-
-   Receivers of the IMMEDIATE_ACK frame MAY choose to delay sending the
-   ACK if the vast majority of received packets contain an IMMEDIATE_ACK
-   or the receiver is under heavy load.  Senders MAY include multiple
-   IMMEDIATE_ACK frames in a single QUIC packet, but the behavior is
-   identical to a single IMMEDIATE_ACK frame.
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                            0xac (i)                         ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-5.  ACK_FREQUENCY Frame
+4.  ACK_FREQUENCY Frame
 
    Delaying acknowledgements as much as possible reduces both work done
    by the endpoints and network load.  An endpoint's loss detection and
@@ -223,7 +205,7 @@ Table of Contents
 
    Sequence Number:  A variable-length integer representing the sequence
       number assigned to the ACK_FREQUENCY frame by the sender to allow
-      receivers to ignore obsolete frames, see Section 6.
+      receivers to ignore obsolete frames, see Section 5.
 
    Ack-Eliciting Threshold:  A variable-length integer representing the
       maximum number of ack-eliciting packets after which the receiver
@@ -266,7 +248,7 @@ Table of Contents
    ACK_FREQUENCY frame, it MUST update this maximum time to the value
    proposed by the peer in the Update Max Ack Delay field.
 
-6.  Multiple ACK_FREQUENCY Frames
+5.  Multiple ACK_FREQUENCY Frames
 
    An endpoint can send multiple ACK_FREQUENCY frames, and each one of
    them can have different values in all fields.  An endpoint MUST use a
@@ -297,13 +279,31 @@ Table of Contents
       see Section 7.  The endpoint MUST also replace the recorded
       sequence number.
 
+6.  IMMEDIATE_ACK Frame
+
+   The IMMEDIATE_ACK Frame is a frame which causes the peer to send a
+   packet containing an ACK frame immediately, similar to the receipt of
+   Initial and Handshake packets during the QUIC handshake.
+
+   Receivers of the IMMEDIATE_ACK frame MAY choose to delay sending the
+   ACK if the vast majority of received packets contain an IMMEDIATE_ACK
+   or the receiver is under heavy load.  Senders MAY include multiple
+   IMMEDIATE_ACK frames in a single QUIC packet, but the behavior is
+   identical to a single IMMEDIATE_ACK frame.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            0xac (i)                         ...
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 7.  Sending Acknowledgments
 
    Prior to receiving an ACK_FREQUENCY frame, endpoints send
    acknowledgements as specified in Section 13.2.1 of [QUIC-TRANSPORT].
 
    On receiving an ACK_FREQUENCY frame and updating its recorded
-   "max_ack_delay" and "Ack-Eliciting Threshold" values (Section 6), the
+   "max_ack_delay" and "Ack-Eliciting Threshold" values (Section 5), the
    endpoint MUST send an acknowledgement when one of the following
    conditions are met:
 
