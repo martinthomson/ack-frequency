@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-09-14T00:55:51.144469+00:00",
+  "timestamp": "2021-09-16T00:54:22.474737+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -784,7 +784,7 @@
       "id": "MDU6SXNzdWU1OTYzMDU2MzM=",
       "title": "ignore_order vs. inducing ack on PTO (aka IMMEDIATE_ACK)",
       "url": "https://github.com/quicwg/ack-frequency/issues/34",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kazuho",
       "authorAssociation": "MEMBER",
       "assignees": [],
@@ -793,8 +793,8 @@
       ],
       "body": "When sending a PTO packet, a sender wants to induce an immediate ACK. The only trick I know to induce such an ACK is intentionally skip the packet number.\r\n\r\nHowever, the problem of that approach is that it relies on the receiver not ignoring reorders.\r\n\r\nWhen an ACK_FREQUENCY frame previously sent had set the `ignore_order` bit, then it become impossible for a sender to induce an immediate ACK when sending a PTO packet.\r\n\r\nAt the moment, the only solution is to bundle an ACK_FREQUENCY packet in each PTO packet, but that seems like a bit of unnecessary overhead to me. Should we have a dedicated frame for inducing immediate ACKs instead?",
       "createdAt": "2020-04-08T04:48:29Z",
-      "updatedAt": "2021-09-08T12:30:44Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-15T23:28:30Z",
+      "closedAt": "2021-09-15T23:28:30Z",
       "comments": [
         {
           "author": "ianswett",
@@ -1523,7 +1523,7 @@
       "id": "MDU6SXNzdWU5OTEwODc4NTc=",
       "title": "Should we add a DELAY_ACK frame?",
       "url": "https://github.com/quicwg/ack-frequency/issues/65",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -1532,8 +1532,8 @@
       ],
       "body": "As a natural opposite to #34 adding an IMMEDIATE_ACK frame, I want to know if the WG thinks there's sufficient interest in this.  I know there are use cases like WebRTC where fine control over the ACKs is desirable.\r\n\r\n@nibanks may be interested in this, since a similar topic came up on https://github.com/quicwg/datagram/issues/42",
       "createdAt": "2021-09-08T12:32:51Z",
-      "updatedAt": "2021-09-14T00:39:06Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-16T00:18:54Z",
+      "closedAt": "2021-09-16T00:18:54Z",
       "comments": [
         {
           "author": "nibanks",
@@ -1604,6 +1604,34 @@
           "body": "Given the pushback against my initial attempt, I'm pivoting to the DELAY_ACK frame.\r\n\r\nI'd actually like the negotiation of this extension to indicate the delayed ack behavior applies to PADDING only and PADDING+ACK packets as well, since I think those can be a bit of a footgun, but I'd like to see what people think of the DELAY_ACK frame before writing that text.",
           "createdAt": "2021-09-14T00:39:06Z",
           "updatedAt": "2021-09-14T00:39:06Z"
+        },
+        {
+          "author": "kazuho",
+          "authorAssociation": "MEMBER",
+          "body": "@janaiyengar \r\n> As a mechanism, we should not use a frame to signal how a different frame should be interpreted. QUIC's design generally assumes that a sender does not control how frames are packetized, and this runs afoul of that unstated assumption.\r\n\r\nI'm not sure if I agree. Yes, I agree with the statement that a frame should not affect how other frames are interpreted.\r\n\r\nBut we can think of DELAY_ACK frame as a frame that affects how a *packet* is processed. Assuming that we adopt IMMEDIATE_ACK, we'd have a precedent for having such a thing. Essentially, IMMEDIATE_ACK is a flag of a packet that happens to be sent as a frame. If we think that way, defining a DELAY_ACK frame (or a THIS_PACKET_IS_NOT_ACK_ELICITING frame) as makes perfect sense IMO.",
+          "createdAt": "2021-09-14T02:51:16Z",
+          "updatedAt": "2021-09-14T02:51:16Z"
+        },
+        {
+          "author": "huitema",
+          "authorAssociation": "NONE",
+          "body": "@ianswett I really think this belongs in a separate draft, and mostly a separate negotiation. It should be possible to negotiate delayed acks without also negotiating ack suppression.",
+          "createdAt": "2021-09-14T02:59:22Z",
+          "updatedAt": "2021-09-14T02:59:22Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks, I've been convinced this belongs in a separate draft, and that there may be more that goes into that draft to enable the various related use cases.\r\n\r\nI'll leave this open for now, but likely close it and the PR in the not so distant future.",
+          "createdAt": "2021-09-14T17:32:48Z",
+          "updatedAt": "2021-09-14T17:32:48Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closing with no action, I think this is the wrong draft.",
+          "createdAt": "2021-09-16T00:18:54Z",
+          "updatedAt": "2021-09-16T00:18:54Z"
         }
       ]
     },
@@ -1619,12 +1647,11 @@
         "ianswett"
       ],
       "labels": [
-        "editorial",
-        "needs-pr"
+        "editorial"
       ],
       "body": "They currently use ascii art.\r\n\r\nWill write this up once #64 is merged.",
       "createdAt": "2021-09-08T15:50:00Z",
-      "updatedAt": "2021-09-08T16:10:33Z",
+      "updatedAt": "2021-09-15T23:33:08Z",
       "closedAt": null,
       "comments": [
         {
@@ -4180,7 +4207,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NzI5NjAyNTY3",
       "title": "Add an IMMEDIATE_ACK frame",
       "url": "https://github.com/quicwg/ack-frequency/pull/64",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -4189,17 +4216,19 @@
       ],
       "body": "Fixes #34 by adding a one byte IMMEDIATE_ACK frame.",
       "createdAt": "2021-09-08T12:30:33Z",
-      "updatedAt": "2021-09-11T08:55:30Z",
+      "updatedAt": "2021-09-15T23:28:30Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "b8a834e72d9d14aa366e81fe5f9ddedd4bf73eb2",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-immediate-ack",
-      "headRefOid": "5de63028efff6d30e523351429a536b1e15bdab8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "e81e1ad5374acb94d239aca590feb2d9b65511bb",
+      "closedAt": "2021-09-15T23:28:30Z",
+      "mergedAt": "2021-09-15T23:28:30Z",
+      "mergedBy": "ianswett",
+      "mergeCommit": {
+        "oid": "2653d744076e98d40bf0b6240d82af2e84f0a2c9"
+      },
       "comments": [
         {
           "author": "LPardue",
@@ -4229,6 +4258,19 @@
           "createdAt": "2021-09-10T12:14:36Z",
           "updatedAt": "2021-09-10T12:14:36Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDODddxTs4s5865",
+          "commit": {
+            "abbreviatedOid": "5de6302"
+          },
+          "author": "kazuho",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-09-14T01:33:19Z",
+          "updatedAt": "2021-09-14T01:33:19Z",
+          "comments": []
         }
       ]
     },
@@ -4237,7 +4279,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NzMxODk5MjAy",
       "title": "Add a DELAY_ACK frame",
       "url": "https://github.com/quicwg/ack-frequency/pull/67",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -4246,14 +4288,14 @@
       ],
       "body": "This frame overrides the behavior of IMMEDIATE_ACK, if the two were to be placed in the same packet.  This would of course be silly, but I don't think it's worth disallowing given the lack of harm.\r\n\r\nFixes #65",
       "createdAt": "2021-09-11T08:51:21Z",
-      "updatedAt": "2021-09-14T00:37:13Z",
+      "updatedAt": "2021-09-15T20:03:54Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "eccfdbe87babccd5294d3264c7627de0f5b08091",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-no-ack",
       "headRefOid": "e25e0d9a8ce01e74404628da8229162e1507aa5d",
-      "closedAt": null,
+      "closedAt": "2021-09-15T20:03:54Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -4266,7 +4308,40 @@
           "updatedAt": "2021-09-13T00:18:30Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDODddxTs4s6Jqd",
+          "commit": {
+            "abbreviatedOid": "e25e0d9"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "Still not supportive of doing this.  See list discussion.",
+          "createdAt": "2021-09-14T03:38:42Z",
+          "updatedAt": "2021-09-14T03:40:25Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Missing negation?",
+              "createdAt": "2021-09-14T03:38:43Z",
+              "updatedAt": "2021-09-14T03:40:25Z"
+            },
+            {
+              "originalPosition": 4,
+              "body": "The ordering of this section is a bit off.  This concept is less important than ACK_FREQUENCY, so it should probably go after it.\r\n\r\nThis frame needs citations from other parts of the document.",
+              "createdAt": "2021-09-14T03:39:47Z",
+              "updatedAt": "2021-09-14T03:51:59Z"
+            },
+            {
+              "originalPosition": 11,
+              "body": "Section reference for IMMEDIATE_ACK?",
+              "createdAt": "2021-09-14T03:40:09Z",
+              "updatedAt": "2021-09-14T03:40:25Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 68,
@@ -4282,13 +4357,13 @@
       ],
       "body": "Per @bbriscoe's suggestion in #48, this PR changes the immediate ACK behavior to only send an immediate ACK when max(2, Ack-Eliciting Threshold) packets with CE marks have been received.\r\n\r\nFixes #48",
       "createdAt": "2021-09-11T20:14:21Z",
-      "updatedAt": "2021-09-14T00:43:04Z",
+      "updatedAt": "2021-09-15T19:58:33Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "eccfdbe87babccd5294d3264c7627de0f5b08091",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-ce-immediate-ack",
-      "headRefOid": "4b138838039d5694b52b52287d37487d41f97ce5",
+      "headRefOid": "da2835217ed4cbe20e1070affb16ea4846b8f2c0",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -4378,6 +4453,155 @@
               "body": "It doesn't actually reduce the response time compared to RFC9000, so I think the current text is more accurate?",
               "createdAt": "2021-09-14T00:43:04Z",
               "updatedAt": "2021-09-14T00:43:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4s6Zq7",
+          "commit": {
+            "abbreviatedOid": "4b13883"
+          },
+          "author": "goelvidhi",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-14T06:06:38Z",
+          "updatedAt": "2021-09-14T06:06:38Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "I copied the `reduces response time` phrase from the current text.\r\nI agree that it doesn't reduce peer's response time to congestion necessarily but makes the response based on the extent of congestion (number of CE marks) instead of its presence. (RFC 9000)\r\n",
+              "createdAt": "2021-09-14T06:06:38Z",
+              "updatedAt": "2021-09-14T06:06:38Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4s7tiv",
+          "commit": {
+            "abbreviatedOid": "4b13883"
+          },
+          "author": "bbriscoe",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-14T12:05:50Z",
+          "updatedAt": "2021-09-14T12:05:50Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "I think the original attempt to emulate Accurate ECN feedback in TCP might have been misguided. The AccECN machinery was necessary in TCP because TCP does _not_ have ACK frequency control. Here in QUIC we are adding ACK frequency control. So the only addition needed for ECN should indeed be to immediately trigger an ACK on a transition from non-CE to CE marking. Then, QUIC should just continue ACKing every Ack-Eliciting Threshold packets. No need for the max(2, ...). I think (I'm not working on QUIC, so I don't keep the whole of the QUIC design in my working memory).\r\n\r\nThat sorts out the lower bound on ACK frequency, but it leaves one problem at the upper bound (if I understand QUIC correctly). [RFC9000 \u00a713.2.1.  Sending ACK Frames](https://datatracker.ietf.org/doc/html/rfc9000#section-13.2.1) and [\u00a713.2.4. Limiting Ranges by Tracking ACK Frames](https://datatracker.ietf.org/doc/html/rfc9000#section-13.2.4) suggest that a host that is only sending non-ack-eliciting packets could occasionally include an ack-eliciting packet (e.g. a ping) to catch up on the feedback and allow the other end to clear out the state its been collecting.\r\n\r\nAn example where this could be a problem is when data transfer switches back and forth from one QUIC peer to the other. Imagine an asymmetric data transfer from A to B ends. If the network CE-marked many or all the ACKs on the reverse path (B-A), I believe A will not ACK any of the last round of ACKs it receives. Then if B becomes the sender of a volley of data, it will unknowingly send data into a path that was already congested just with ACKs.\r\n\r\nWith ECN, I'm not sure it's the best design to rely on the sender of the non-ack-eliciting packets (B in the example) to send an occasional ack-eliciting packet. If the receiver of the non-ack-eliciting packets (A) is seeing a large amount of ECN marks, it ought to be able to send occasional ACKs of non-ack-eliciting packets (to B), whether or not B asks for them.\r\n\r\nIn AccECN, we allowed TCP to ack a sequence of CE-marked ACKs, as long as the ACK frequency was no less than 1 per 3 CE-marked packets. Even with 100% CE-marking, this damps any potential ACK ping-pong but still ensures the other end receive feedback of congestion events.\r\n",
+              "createdAt": "2021-09-14T12:05:50Z",
+              "updatedAt": "2021-09-14T12:05:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4s7xXI",
+          "commit": {
+            "abbreviatedOid": "4b13883"
+          },
+          "author": "bbriscoe",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-14T12:21:20Z",
+          "updatedAt": "2021-09-14T12:21:20Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "This phrase is not right: \r\n`especially when peers are using DCTCP {{?RFC8257}} or other congestion controllers that respond to immediate CE markings which are much more frequent than classic ECN {{?RFC3168}}.`\r\nFor a start all controllers _respond_ to more frequent CE markings, it's ones that _cause_ more frequent markings. But it's also for during extremes of congestion on the reverse path, irrespective of the type of controller. How about:\r\n`especially during periods of extreme congestion on the reverse path, or when peers are using DCTCP {{?RFC8257}} or other congestion controllers that routinely cause more frequent ECN marking than classic ECN {{?RFC3168}}.`",
+              "createdAt": "2021-09-14T12:21:20Z",
+              "updatedAt": "2021-09-14T12:21:20Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4tCPFu",
+          "commit": {
+            "abbreviatedOid": "2a861ba"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-15T19:53:14Z",
+          "updatedAt": "2021-09-15T19:53:14Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "The PR had already been updated to be more similar to your text, but I added 'extreme congestion', PTAL",
+              "createdAt": "2021-09-15T19:53:14Z",
+              "updatedAt": "2021-09-15T19:53:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4tCPjB",
+          "commit": {
+            "abbreviatedOid": "2a861ba"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-15T19:55:30Z",
+          "updatedAt": "2021-09-15T19:55:30Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "Thanks, I'll update this to make it so CE marked packets are treated like ack-eliciting packets from an ACK perspective, which I think solves the upper bound problem you're outlining?",
+              "createdAt": "2021-09-15T19:55:30Z",
+              "updatedAt": "2021-09-15T19:55:30Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 69,
+      "id": "PR_kwDODddxTs4rz1Xq",
+      "title": "Use RFC9000 frame formats",
+      "url": "https://github.com/quicwg/ack-frequency/pull/69",
+      "state": "OPEN",
+      "author": "ianswett",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "editorial"
+      ],
+      "body": "Fixes #66",
+      "createdAt": "2021-09-16T00:17:58Z",
+      "updatedAt": "2021-09-16T00:22:03Z",
+      "baseRepository": "quicwg/ack-frequency",
+      "baseRefName": "main",
+      "baseRefOid": "2653d744076e98d40bf0b6240d82af2e84f0a2c9",
+      "headRepository": "quicwg/ack-frequency",
+      "headRefName": "ianswett-frame-formats",
+      "headRefOid": "ba93d9081c3a7e6ebb08f6b5f73248ad9f09fdfa",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDODddxTs4tC3df",
+          "commit": {
+            "abbreviatedOid": "ba93d90"
+          },
+          "author": "LPardue",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-16T00:22:02Z",
+          "updatedAt": "2021-09-16T00:22:03Z",
+          "comments": [
+            {
+              "originalPosition": 36,
+              "body": "Name typi",
+              "createdAt": "2021-09-16T00:22:02Z",
+              "updatedAt": "2021-09-16T00:22:03Z"
             }
           ]
         }
