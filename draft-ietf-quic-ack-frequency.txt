@@ -5,8 +5,8 @@
 QUIC                                                          J. Iyengar
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                I. Swett
-Expires: 19 March 2022                                            Google
-                                                       15 September 2021
+Expires: 21 March 2022                                            Google
+                                                       17 September 2021
 
 
                      QUIC Acknowledgement Frequency
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 March 2022.
+   This Internet-Draft will expire on 21 March 2022.
 
 Copyright Notice
 
@@ -194,19 +194,13 @@ Table of Contents
    receive ACK frames to its peer using an ACK_FREQUENCY frame, shown
    below:
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                            0xaf (i)                         ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                      Sequence Number (i)                    ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                  Ack-Eliciting Threshold (i)                ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Request Max Ack Delay (i)                ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | Ignore Order (8)|
-   +-+-+-+-+-+-+-+-+-+
+   ACK_FREQUENCY Frame {
+     Type (i) = 0xaf,
+     Sequence Number (i),
+     Ack-Eliciting Threshold (i),
+     Request Max Ack Delay (i),
+     Ignore Order (8),
+   }
 
    Following the common frame format described in Section 12.4 of
    [QUIC-TRANSPORT], ACK_FREQUENCY frames have a type of 0xaf, and
@@ -298,11 +292,9 @@ Table of Contents
    IMMEDIATE_ACK frames in a single QUIC packet, but the behavior is
    identical to a single IMMEDIATE_ACK frame.
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                            0xac (i)                         ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   IMMEDIATE_ACK Frame {
+     Type (i) = 0xac,
+   }
 
 7.  Sending Acknowledgments
 
