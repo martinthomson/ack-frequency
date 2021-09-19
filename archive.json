@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-09-16T00:54:22.474737+00:00",
+  "timestamp": "2021-09-19T00:52:58.990488+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -1454,9 +1454,17 @@
       ],
       "body": "It's also true that for many RF media, the performance of the forward path can be impacted by the **rate** of acknowledgment packets when the link bandwidth is shared.\r\n\r\n",
       "createdAt": "2021-06-17T14:16:06Z",
-      "updatedAt": "2021-07-22T20:36:16Z",
+      "updatedAt": "2021-09-17T11:22:00Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "NONE",
+          "body": " \u201cSeverely asymmetric link technologies, such as DOCSIS, LTE, and satellite links, connection throughput in the data direction becomes constrained when the reverse bandwidth is filled by acknowledgment packets. When traversing such links, reducing the number of acknowledgments allows connection throughput to scale much further.\u201d\r\n\r\n- I\u2019m going to push back again on this as largely wrong. Links such as DOCSIS, LTE,  satellite and WiFi are asymmetric. But it\u2019s not just that the design decisions made for these types of link resulted in asymmetric capacity (throughput limit), the designs also share the capacity, and it is important to mitigate the impact on that sharing of capacity, than purely thinking of it items of bytes/sec of capacity used.  A lower feedback rate can help avoid inducing flow starvation to other flows that share resources along the path they use.\r\n\r\n- On mobile devices sending data consumes RF and battery power and is more costly for a host of reasons  not just asymmetry when present.\r\n",
+          "createdAt": "2021-09-17T11:22:00Z",
+          "updatedAt": "2021-09-17T11:22:00Z"
+        }
+      ]
     },
     {
       "number": 53,
@@ -1640,7 +1648,7 @@
       "id": "MDU6SXNzdWU5OTEyODc3NDY=",
       "title": "Change diagrams to use the notation in QUIC transport",
       "url": "https://github.com/quicwg/ack-frequency/issues/66",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -1651,8 +1659,8 @@
       ],
       "body": "They currently use ascii art.\r\n\r\nWill write this up once #64 is merged.",
       "createdAt": "2021-09-08T15:50:00Z",
-      "updatedAt": "2021-09-15T23:33:08Z",
-      "closedAt": null,
+      "updatedAt": "2021-09-17T21:08:54Z",
+      "closedAt": "2021-09-17T21:08:54Z",
       "comments": [
         {
           "author": "LPardue",
@@ -1662,6 +1670,104 @@
           "updatedAt": "2021-09-08T16:10:33Z"
         }
       ]
+    },
+    {
+      "number": 70,
+      "id": "I_kwDODddxTs47juPn",
+      "title": "Can we explain the motivation for Immediate ACK?",
+      "url": "https://github.com/quicwg/ack-frequency/issues/70",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "editorial"
+      ],
+      "body": "There's nothing odd about an immediate ACK! Perhaps the text should start by saying that the spec allows a receiver to do this anyway?\r\n\r\nHowever, the current text doesn't explain why the Immediate ACK might be useful.\r\n\r\nI could see three places that might benefit from an IMMEDIATE_ACK:\r\n\r\nTwo cases relevant to SCTP [RFC7053] are: When the rate of transmission was very low and packets might be lost and not detected (something not uncommon in some SCTP uses); as an alternative to detect connectivity failure and trigger path failover. I'm not sure how important these specific cases are for QUIC, because the discussion at the time in TSVWG appeared to centre around use for signalling traffic?\r\n\r\nThere could also be real opportunity to use this to get more precise timing/congestion information. A set of per-packet ACKs might be useful while a CC is probing to confirm available capacity, etc.\r\n\r\nHave I missed a killer application for the method - it would be helpful to me to understand /some example for how the WG think this could be used. \r\n\r\n(aside: I am actually uncertain whether this would really be a good change to TCP, especially with the heterogeniety of TCP middleboxes and senders,... that's another story, but I'd think it might be nice to not rely on draft-gomez-tcpm-ack-pull as a reference. I could suggest RFC7053, where people might recall there was quite some discussion in TSVWG about whether SCTP would benefit from being able to trigger an immediate response.)\r\n\r\n",
+      "createdAt": "2021-09-17T10:55:09Z",
+      "updatedAt": "2021-09-18T08:21:43Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "evolodina",
+          "authorAssociation": "NONE",
+          "body": "We use an immediate ACK to support CC by delayed ACKs. ",
+          "createdAt": "2021-09-17T11:44:30Z",
+          "updatedAt": "2021-09-17T11:44:30Z"
+        }
+      ]
+    },
+    {
+      "number": 71,
+      "id": "I_kwDODddxTs47j0nV",
+      "title": "Undesirable consequences seems over stated for small changes",
+      "url": "https://github.com/quicwg/ack-frequency/issues/71",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "\u201cAs discussed in Section 9 however, there are undesirable consequences to congestion control and loss recovery if a receiver uniltaerally reduces the acknowledgment frequency.\u201c\r\n\r\n- This is a harsh statement. I don\u2019t think it is true for smaller changes. There is much experience of using TCP where stretch ACKs cover more than two packets. This is a matter of scale. For instance: I\u2019m confident that stretched TCP ACKs covering 4 segments (maybe more ... I\u2019d love to say up to IW) would not break TCP CC, so I don\u2019t see why the editors want to suggest it could break QUIC CC! This really does need a less obfuscated explanation. \r\n",
+      "createdAt": "2021-09-17T11:25:38Z",
+      "updatedAt": "2021-09-18T08:23:23Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'd be happy to reword this to \"there can be undesirable consequences ...\", but were you looking for a larger change?",
+          "createdAt": "2021-09-18T08:23:23Z",
+          "updatedAt": "2021-09-18T08:23:23Z"
+        }
+      ]
+    },
+    {
+      "number": 72,
+      "id": "I_kwDODddxTs47j0t4",
+      "title": "Delaying detection of loss is a serious CC problem",
+      "url": "https://github.com/quicwg/ack-frequency/issues/72",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 9.1 - There are CC considerations with respect to how long it is reasonable for a flow to hold-off detecting congestion and responding. This needs to be discussed.\r\n\r\nWhen an endpoint detects persistent congestion, it MUST promptly reduce the rate of transmission when it receive or detects an indication of congestion (e.g., loss or ECN marking) [RFC2914], the Ignore Order value of true (0x01) in this ID allows a sender to extend that period, postponing detection of loss. That might be reasonable, but excessive delay can be dangerous - and therefore the impact really needs to be discussed: delaying a fraction of a RTT is in my mind safe, intentionally delaying by an RTT is arguable. A delay of many RTTs is endangers other flows, and we need to at least say that in some way ([RFC8084] took an alternate view of how long might be safe).\r\n",
+      "createdAt": "2021-09-17T11:26:11Z",
+      "updatedAt": "2021-09-17T11:26:11Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 73,
+      "id": "I_kwDODddxTs47j0z6",
+      "title": "Section 9.3 - Isn\u2019t ACK Clocking different to the CC?",
+      "url": "https://github.com/quicwg/ack-frequency/issues/73",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "To me, ACK Clocking is a separate point that applies to any type of CC when the cwnd limits the sender.\r\n\r\nI agree there could be a concern is around whether a less frequent ACK policy can induce a cwnd-limited sender to send bursts of packets that could induce loss or disrupt sharing of the path with other flows. The QUIC specification already permits an initial window of 10 packets, and motivates the need for pacing. I think it is important this text refers to the QUIC transport section on pacing to mitigate bursts.\r\n",
+      "createdAt": "2021-09-17T11:26:43Z",
+      "updatedAt": "2021-09-17T11:26:43Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 74,
+      "id": "I_kwDODddxTs47j1eB",
+      "title": "Impact of Delayed ACKs on CC growth",
+      "url": "https://github.com/quicwg/ack-frequency/issues/74",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In 9.3. Window-based Congestion Controllers\r\n\r\nI thought that unless there is loss reported, a QUIC ACK Frame releases sending window. In a similar manner as the accurate byte counting style in TCP, a QUIC sender solely operates on the basis of bytes acked, not the number of ACK frames received. \r\n\r\nSo while a delayed ACK could delay a round of growth when the ACK Ratio is larger, it is only delayed by the time to ACK the set of received packets. In looking at various QUIC CC over medium and longer path RTTs this effect was quite small, and the default ACK delay was not unreasonable; for shorter path RTTs this might be different\r\n",
+      "createdAt": "2021-09-17T11:30:01Z",
+      "updatedAt": "2021-09-17T11:30:01Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -4355,15 +4461,15 @@
       "labels": [
         "design"
       ],
-      "body": "Per @bbriscoe's suggestion in #48, this PR changes the immediate ACK behavior to only send an immediate ACK when max(2, Ack-Eliciting Threshold) packets with CE marks have been received.\r\n\r\nFixes #48",
+      "body": "Per @bbriscoe's suggestion in #48, this PR changes the immediate ACK behavior to only send an immediate ACK when transitioning from non-marked to CE marked.\r\n\r\nAlso treats receipt of non Ack-Eliciting packets as Ack-Eliciting if they are CE marked.\r\n\r\nFixes #48",
       "createdAt": "2021-09-11T20:14:21Z",
-      "updatedAt": "2021-09-15T19:58:33Z",
+      "updatedAt": "2021-09-16T09:56:44Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "eccfdbe87babccd5294d3264c7627de0f5b08091",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-ce-immediate-ack",
-      "headRefOid": "da2835217ed4cbe20e1070affb16ea4846b8f2c0",
+      "headRefOid": "0904190088766053477eb696c541b70d53b465fe",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -4555,6 +4661,86 @@
               "updatedAt": "2021-09-15T19:55:30Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4tER4E",
+          "commit": {
+            "abbreviatedOid": "da28352"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-16T09:53:58Z",
+          "updatedAt": "2021-09-16T09:53:58Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "```suggestion\r\nreceived and the previously received packet was not marked CE.\r\n```",
+              "createdAt": "2021-09-16T09:53:58Z",
+              "updatedAt": "2021-09-16T09:53:58Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4tESFy",
+          "commit": {
+            "abbreviatedOid": "da28352"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-16T09:54:55Z",
+          "updatedAt": "2021-09-16T09:54:56Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "```suggestion\r\nAn endpount SHOULD also acknowledge packets received with a CE mark as though\r\n```",
+              "createdAt": "2021-09-16T09:54:55Z",
+              "updatedAt": "2021-09-16T09:54:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4tESOd",
+          "commit": {
+            "abbreviatedOid": "9cfd170"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-16T09:55:32Z",
+          "updatedAt": "2021-09-16T09:55:32Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "```suggestion\r\nfeedback on CE is received in a timely manner when most packets are\r\nnot ack-eliciting.\r\n```",
+              "createdAt": "2021-09-16T09:55:32Z",
+              "updatedAt": "2021-09-16T09:55:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4tESeg",
+          "commit": {
+            "abbreviatedOid": "b807548"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-16T09:56:33Z",
+          "updatedAt": "2021-09-16T09:56:34Z",
+          "comments": [
+            {
+              "originalPosition": 21,
+              "body": "```suggestion\r\ncongestion controllers that mark much more frequently than classic ECN {{?RFC3168}}.\r\n```",
+              "createdAt": "2021-09-16T09:56:34Z",
+              "updatedAt": "2021-09-16T09:56:34Z"
+            }
+          ]
         }
       ]
     },
@@ -4563,7 +4749,7 @@
       "id": "PR_kwDODddxTs4rz1Xq",
       "title": "Use RFC9000 frame formats",
       "url": "https://github.com/quicwg/ack-frequency/pull/69",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ianswett",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -4572,17 +4758,19 @@
       ],
       "body": "Fixes #66",
       "createdAt": "2021-09-16T00:17:58Z",
-      "updatedAt": "2021-09-16T00:22:03Z",
+      "updatedAt": "2021-09-17T21:08:54Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "2653d744076e98d40bf0b6240d82af2e84f0a2c9",
       "headRepository": "quicwg/ack-frequency",
       "headRefName": "ianswett-frame-formats",
-      "headRefOid": "ba93d9081c3a7e6ebb08f6b5f73248ad9f09fdfa",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "fd9135603d3f7b6cec1483a2a183b6c8b2d0b598",
+      "closedAt": "2021-09-17T21:08:54Z",
+      "mergedAt": "2021-09-17T21:08:54Z",
+      "mergedBy": "ianswett",
+      "mergeCommit": {
+        "oid": "7976fcdf42b6c9893e3862e7833a214f93b0cac1"
+      },
       "comments": [],
       "reviews": [
         {
@@ -4604,6 +4792,39 @@
               "updatedAt": "2021-09-16T00:22:03Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4tEQ6i",
+          "commit": {
+            "abbreviatedOid": "ba93d90"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-09-16T09:50:01Z",
+          "updatedAt": "2021-09-16T09:50:04Z",
+          "comments": [
+            {
+              "originalPosition": 36,
+              "body": "```suggestion\r\nIMMEDIATE_ACK Frame {\r\n```",
+              "createdAt": "2021-09-16T09:50:01Z",
+              "updatedAt": "2021-09-16T09:50:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4tK-bR",
+          "commit": {
+            "abbreviatedOid": "fd91356"
+          },
+          "author": "LPardue",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-09-17T20:54:31Z",
+          "updatedAt": "2021-09-17T20:54:31Z",
+          "comments": []
         }
       ]
     }
