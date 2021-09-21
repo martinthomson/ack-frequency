@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-09-19T00:52:58.990488+00:00",
+  "timestamp": "2021-09-21T00:53:24.648741+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -1709,7 +1709,7 @@
       "labels": [],
       "body": "\u201cAs discussed in Section 9 however, there are undesirable consequences to congestion control and loss recovery if a receiver uniltaerally reduces the acknowledgment frequency.\u201c\r\n\r\n- This is a harsh statement. I don\u2019t think it is true for smaller changes. There is much experience of using TCP where stretch ACKs cover more than two packets. This is a matter of scale. For instance: I\u2019m confident that stretched TCP ACKs covering 4 segments (maybe more ... I\u2019d love to say up to IW) would not break TCP CC, so I don\u2019t see why the editors want to suggest it could break QUIC CC! This really does need a less obfuscated explanation. \r\n",
       "createdAt": "2021-09-17T11:25:38Z",
-      "updatedAt": "2021-09-18T08:23:23Z",
+      "updatedAt": "2021-09-20T08:15:16Z",
       "closedAt": null,
       "comments": [
         {
@@ -1718,6 +1718,13 @@
           "body": "I'd be happy to reword this to \"there can be undesirable consequences ...\", but were you looking for a larger change?",
           "createdAt": "2021-09-18T08:23:23Z",
           "updatedAt": "2021-09-18T08:23:23Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "NONE",
+          "body": "Thanks - yes, /can be/ would seem fair, since they are enumerated later.",
+          "createdAt": "2021-09-20T08:15:04Z",
+          "updatedAt": "2021-09-20T08:15:16Z"
         }
       ]
     },
@@ -1733,9 +1740,17 @@
       "labels": [],
       "body": "Section 9.1 - There are CC considerations with respect to how long it is reasonable for a flow to hold-off detecting congestion and responding. This needs to be discussed.\r\n\r\nWhen an endpoint detects persistent congestion, it MUST promptly reduce the rate of transmission when it receive or detects an indication of congestion (e.g., loss or ECN marking) [RFC2914], the Ignore Order value of true (0x01) in this ID allows a sender to extend that period, postponing detection of loss. That might be reasonable, but excessive delay can be dangerous - and therefore the impact really needs to be discussed: delaying a fraction of a RTT is in my mind safe, intentionally delaying by an RTT is arguable. A delay of many RTTs is endangers other flows, and we need to at least say that in some way ([RFC8084] took an alternate view of how long might be safe).\r\n",
       "createdAt": "2021-09-17T11:26:11Z",
-      "updatedAt": "2021-09-17T11:26:11Z",
+      "updatedAt": "2021-09-20T15:00:24Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "NONE",
+          "body": "See PR #75 ",
+          "createdAt": "2021-09-20T15:00:23Z",
+          "updatedAt": "2021-09-20T15:00:23Z"
+        }
+      ]
     },
     {
       "number": 73,
@@ -1749,9 +1764,17 @@
       "labels": [],
       "body": "To me, ACK Clocking is a separate point that applies to any type of CC when the cwnd limits the sender.\r\n\r\nI agree there could be a concern is around whether a less frequent ACK policy can induce a cwnd-limited sender to send bursts of packets that could induce loss or disrupt sharing of the path with other flows. The QUIC specification already permits an initial window of 10 packets, and motivates the need for pacing. I think it is important this text refers to the QUIC transport section on pacing to mitigate bursts.\r\n",
       "createdAt": "2021-09-17T11:26:43Z",
-      "updatedAt": "2021-09-17T11:26:43Z",
+      "updatedAt": "2021-09-20T15:00:03Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "NONE",
+          "body": "Better worded perhaps in PR#75.\r\n",
+          "createdAt": "2021-09-20T15:00:03Z",
+          "updatedAt": "2021-09-20T15:00:03Z"
+        }
+      ]
     },
     {
       "number": 74,
@@ -1765,9 +1788,17 @@
       "labels": [],
       "body": "In 9.3. Window-based Congestion Controllers\r\n\r\nI thought that unless there is loss reported, a QUIC ACK Frame releases sending window. In a similar manner as the accurate byte counting style in TCP, a QUIC sender solely operates on the basis of bytes acked, not the number of ACK frames received. \r\n\r\nSo while a delayed ACK could delay a round of growth when the ACK Ratio is larger, it is only delayed by the time to ACK the set of received packets. In looking at various QUIC CC over medium and longer path RTTs this effect was quite small, and the default ACK delay was not unreasonable; for shorter path RTTs this might be different\r\n",
       "createdAt": "2021-09-17T11:30:01Z",
-      "updatedAt": "2021-09-17T11:30:01Z",
+      "updatedAt": "2021-09-20T14:59:33Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "NONE",
+          "body": "See PR #75 ",
+          "createdAt": "2021-09-20T14:59:32Z",
+          "updatedAt": "2021-09-20T14:59:32Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -4827,6 +4858,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 75,
+      "id": "PR_kwDODddxTs4r99Me",
+      "title": "Update draft-ietf-quic-ack-frequency.md",
+      "url": "https://github.com/quicwg/ack-frequency/pull/75",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "PR clarifying the consequencies and traedoffs in adjusting the ACK Policy.",
+      "createdAt": "2021-09-20T14:58:34Z",
+      "updatedAt": "2021-09-20T15:53:35Z",
+      "baseRepository": "quicwg/ack-frequency",
+      "baseRefName": "main",
+      "baseRefOid": "7976fcdf42b6c9893e3862e7833a214f93b0cac1",
+      "headRepository": "gorryfair/ack-frequency",
+      "headRefName": "patch-1",
+      "headRefOid": "714d91b9d4be665c044bae5d3172e08e458968a2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
