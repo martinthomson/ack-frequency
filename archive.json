@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-09-21T00:53:24.648741+00:00",
+  "timestamp": "2021-09-23T00:56:49.658759+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -4494,7 +4494,7 @@
       ],
       "body": "Per @bbriscoe's suggestion in #48, this PR changes the immediate ACK behavior to only send an immediate ACK when transitioning from non-marked to CE marked.\r\n\r\nAlso treats receipt of non Ack-Eliciting packets as Ack-Eliciting if they are CE marked.\r\n\r\nFixes #48",
       "createdAt": "2021-09-11T20:14:21Z",
-      "updatedAt": "2021-09-16T09:56:44Z",
+      "updatedAt": "2021-09-21T07:00:21Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "eccfdbe87babccd5294d3264c7627de0f5b08091",
@@ -4871,7 +4871,7 @@
       "labels": [],
       "body": "PR clarifying the consequencies and traedoffs in adjusting the ACK Policy.",
       "createdAt": "2021-09-20T14:58:34Z",
-      "updatedAt": "2021-09-20T15:53:35Z",
+      "updatedAt": "2021-09-21T05:36:13Z",
       "baseRepository": "quicwg/ack-frequency",
       "baseRefName": "main",
       "baseRefOid": "7976fcdf42b6c9893e3862e7833a214f93b0cac1",
