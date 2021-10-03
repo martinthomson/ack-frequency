@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-09-23T00:56:49.658759+00:00",
+  "timestamp": "2021-10-03T00:58:20.116676+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -765,7 +765,7 @@
       "id": "MDU6SXNzdWU1NjIwMDQxNTQ=",
       "title": "Make it more clear that implementations can send less ACKs",
       "url": "https://github.com/quicwg/ack-frequency/issues/30",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "rpaulo",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -775,9 +775,17 @@
       ],
       "body": "As discussed with @janaiyengar a couple days ago, I think the draft should make it clear that implementations are allowed to send less ACKs than the requested \"packet tolerance\".\r\n\r\n> 6.3.  Batch Processing of Packets\r\n>   For performance reasons, an endpoint can receive incoming packets\r\n>   from the underlying platform in a batch of multiple packets.  This\r\n>   batch can contain enough packets to cause multiple acknowledgements\r\n>   to be sent.\r\n>\r\n>   To avoid sending multiple acknowledgements in rapid succession, an\r\n>   endpoint MAY process all packets in a batch before determining\r\n>   whether a threshold has been met and an acknowledgement is to be sent\r\n>   in response.\r\n\r\nThe last paragraph is a bit unclear since \"threshold\" is undefined.  I think we should just say that:\r\n\r\n1) it MAY process all packets in a batch (already there)\r\n2) it MAY send less ACKs when it has finished processing the batch\r\n\r\n",
       "createdAt": "2020-02-08T11:02:23Z",
-      "updatedAt": "2021-07-27T21:01:57Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2021-10-01T20:36:49Z",
+      "closedAt": "2021-10-01T20:36:49Z",
+      "comments": [
+        {
+          "author": "rpaulo",
+          "authorAssociation": "NONE",
+          "body": "Already clarified in RFC 9000.",
+          "createdAt": "2021-10-01T20:36:49Z",
+          "updatedAt": "2021-10-01T20:36:49Z"
+        }
+      ]
     },
     {
       "number": 34,
@@ -1799,6 +1807,48 @@
           "updatedAt": "2021-09-20T14:59:32Z"
         }
       ]
+    },
+    {
+      "number": 76,
+      "id": "I_kwDODddxTs48a2d7",
+      "title": "Editorial: Ignore Order explanation",
+      "url": "https://github.com/quicwg/ack-frequency/issues/76",
+      "state": "OPEN",
+      "author": "rpaulo",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "editorial"
+      ],
+      "body": "Section 4 explains what all the fields are mean first and then explains the exception cases.  It seems like this was done the opposite way for Ignore order.\r\n\r\nI propose we change the current text:\r\n> An 8-bit field representing a boolean truth value. This field MUST have the value 0x00 (representing false) or 0x01 (representing true). This field can be set to true by an endpoint that does not wish to receive an immediate acknowledgement when the peer observes reordering (Section 7.1). Receipt of any other value MUST be treated as a connection error of type FRAME_ENCODING_ERROR.\r\n\r\nTo:\r\n> An 8-bit field representing a boolean truth value. This field can be set to true by an endpoint that does not wish to receive an immediate acknowledgement when the peer observes reordering (Section 7.1).  The value of this field MUST be 0x00 (representing false) or 0x01 (representing true). Receipt of any other value MUST be treated as a connection error of type FRAME_ENCODING_ERROR.\r\n",
+      "createdAt": "2021-10-01T19:02:05Z",
+      "updatedAt": "2021-10-01T20:08:06Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "SGTM, want to send me a PR or should I?",
+          "createdAt": "2021-10-01T20:08:01Z",
+          "updatedAt": "2021-10-01T20:08:01Z"
+        }
+      ]
+    },
+    {
+      "number": 79,
+      "id": "I_kwDODddxTs48bfGz",
+      "title": "Migration and ACK frequency",
+      "url": "https://github.com/quicwg/ack-frequency/issues/79",
+      "state": "OPEN",
+      "author": "rpaulo",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The draft doesn't mention anything about ACK frequency and connection migration.  What should we do, for example, when a client has migrated and now sends a PING to force the server to use a new path?  Should it send PING+IMMEDIATE_ACK?",
+      "createdAt": "2021-10-01T23:30:22Z",
+      "updatedAt": "2021-10-01T23:30:22Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -4884,6 +4934,135 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 77,
+      "id": "PR_kwDODddxTs4sk8YG",
+      "title": "Clarify an endpoint can send less ACKs when processing packets in a batch.",
+      "url": "https://github.com/quicwg/ack-frequency/pull/77",
+      "state": "CLOSED",
+      "author": "rpaulo",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes issue #30.",
+      "createdAt": "2021-10-01T19:18:25Z",
+      "updatedAt": "2021-10-01T20:36:34Z",
+      "baseRepository": "quicwg/ack-frequency",
+      "baseRefName": "main",
+      "baseRefOid": "7976fcdf42b6c9893e3862e7833a214f93b0cac1",
+      "headRepository": "rpaulo/ack-frequency",
+      "headRefName": "less-acks-batch",
+      "headRefOid": "c47a7a74816a4dacf579ef670e0ff592257326e6",
+      "closedAt": "2021-10-01T20:36:34Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "rpaulo",
+          "authorAssociation": "NONE",
+          "body": "Where does RFC 9000 specifically talk about batching?",
+          "createdAt": "2021-10-01T20:27:11Z",
+          "updatedAt": "2021-10-01T20:27:11Z"
+        },
+        {
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "body": "\"A receiver MAY process multiple available packets before determining\r\n whether to send an ACK frame in response.\" from Section 13.2.2: https://datatracker.ietf.org/doc/html/rfc9000#section-13.2.2",
+          "createdAt": "2021-10-01T20:29:51Z",
+          "updatedAt": "2021-10-01T20:29:51Z"
+        },
+        {
+          "author": "rpaulo",
+          "authorAssociation": "NONE",
+          "body": "You added that section in f8fc854dc back in 2019 but I don't think it was clear enough.  @janaiyengar cleared up that section in May (or so) 2020 which was after I wrote issue #30.  I'll close.",
+          "createdAt": "2021-10-01T20:36:34Z",
+          "updatedAt": "2021-10-01T20:36:34Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDODddxTs4t2sq2",
+          "commit": {
+            "abbreviatedOid": "1913ac2"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-10-01T19:31:31Z",
+          "updatedAt": "2021-10-01T19:31:32Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\r\nwait to process all available packets in a batch before sending an\r\nacknowledgement.\r\n```",
+              "createdAt": "2021-10-01T19:31:31Z",
+              "updatedAt": "2021-10-01T19:31:52Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDODddxTs4t21fE",
+          "commit": {
+            "abbreviatedOid": "c47a7a7"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "One question on this PR.  It seems somewhat duplicative of what's in RFC9000.  Can you clarify what's new?",
+          "createdAt": "2021-10-01T20:23:55Z",
+          "updatedAt": "2021-10-01T20:23:55Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 78,
+      "id": "PR_kwDODddxTs4slFMO",
+      "title": "Improve Ignore Order explanation.",
+      "url": "https://github.com/quicwg/ack-frequency/pull/78",
+      "state": "OPEN",
+      "author": "rpaulo",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes issue #76.",
+      "createdAt": "2021-10-01T20:20:54Z",
+      "updatedAt": "2021-10-01T20:25:57Z",
+      "baseRepository": "quicwg/ack-frequency",
+      "baseRefName": "main",
+      "baseRefOid": "7976fcdf42b6c9893e3862e7833a214f93b0cac1",
+      "headRepository": "rpaulo/ack-frequency",
+      "headRefName": "ignore-reorder-wording",
+      "headRefOid": "6aaeda11f68f91a3d840bd6512718c859a55e048",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDODddxTs4t21Ri",
+          "commit": {
+            "abbreviatedOid": "956f88f"
+          },
+          "author": "ianswett",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-10-01T20:22:50Z",
+          "updatedAt": "2021-10-01T20:22:50Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "```suggestion\r\n: An 8-bit field representing a boolean truth value. This field is\r\n```",
+              "createdAt": "2021-10-01T20:22:50Z",
+              "updatedAt": "2021-10-01T20:22:50Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
