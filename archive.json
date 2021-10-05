@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-10-03T00:58:20.116676+00:00",
+  "timestamp": "2021-10-05T00:55:09.141070+00:00",
   "repo": "quicwg/ack-frequency",
   "labels": [
     {
@@ -1847,6 +1847,24 @@
       "body": "The draft doesn't mention anything about ACK frequency and connection migration.  What should we do, for example, when a client has migrated and now sends a PING to force the server to use a new path?  Should it send PING+IMMEDIATE_ACK?",
       "createdAt": "2021-10-01T23:30:22Z",
       "updatedAt": "2021-10-01T23:30:22Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 80,
+      "id": "I_kwDODddxTs48iPnz",
+      "title": "Guidance on min_ack_delay",
+      "url": "https://github.com/quicwg/ack-frequency/issues/80",
+      "state": "OPEN",
+      "author": "rpaulo",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "editorial"
+      ],
+      "body": "Although I understand what min_ack_delay represents it's not clear to me what an implementation should do with that value. Is the purpose to make sure that stacks sufficiently wait enough time before triggering PTO?  There's no guidance on this in the draft.  Perhaps there should be.",
+      "createdAt": "2021-10-04T20:36:15Z",
+      "updatedAt": "2021-10-04T21:40:14Z",
       "closedAt": null,
       "comments": []
     }
